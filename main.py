@@ -23,6 +23,7 @@ def eval_fn(ind):
 
 
 #What are the individuals though? What makes them
-best = algo.optimise(eval_fn)
+
+
 print("\n" + algo.summary())
 plots.default_plots_grid(logger)
