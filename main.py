@@ -7,7 +7,9 @@ grid = containers.Grid(shape=(64,64), max_items_per_bin=1, fitness_domain=((0., 
 #:SOB:
 
 
+#This is what we need to change 
 algo = algorithms.RandomSearchMutPolyBounded(grid, budget=100000, batch_size=500, dimension=3, optimisation_task="maximization")
+
 logger = algorithms.TQDMAlgorithmLogger(algo)
 
 
