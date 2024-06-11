@@ -1,4 +1,5 @@
+import tensorflow as tf
 
 
-toolbox.register("individual", tools.initIterate, creator.Individual,
-                 toolbox.expr)
+
+
