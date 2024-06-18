@@ -11,7 +11,7 @@ class modelReader:
         pass
 
         
-    def checkSave():
+    def checkSave(self):
         try:
             open("my_model.keras","r")
             return True
@@ -19,12 +19,18 @@ class modelReader:
             return False
     def createSave(self,model):
         try:
+            print("ATTEMPTINGSAVE")
             model.save('my_model.keras')
+            print("Save Good")
+
             return True
         except:
+            print("SAVE FAILED")
             return False
     def loadSave(self):
+        print("Trying to Load Model")
         self.model = models.load_model('my_model.keras')
+        print("Loaded Model")
         return True
     
     
@@ -32,8 +38,8 @@ class modelReader:
         #Everything in this file kinda. 
         # Generating some  data
         if self.checkSave():
-            self.model = self.loadSave()
-            return
+            self.loadSave()
+            return "Recived from File"
         data,labels = self.loadData(datalink)  # 30000,23 | 30000,1
 
         #Standarize data. 
@@ -74,9 +80,12 @@ class modelReader:
         model.fit(data, labels, epochs=20, batch_size=16, validation_split=0.2)
         self.model = model
 
+
+        self.createSave(model)
         self.evaluate(dataEVAL,labelEVAL,data,labels)
 
-        return
+        return "Recived from File"
+
 
 
     def evaluate(self, dataEVAL,labelEVAL,data,labels):
