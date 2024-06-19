@@ -8,6 +8,8 @@ import csv
 class modelReader:
     def __init__(self) -> None:
         self.model=None
+        self.trainedMean = 0
+        self.trainedSTD = 0
         pass
 
         
@@ -17,6 +19,8 @@ class modelReader:
             return True
         except:
             return False
+        
+
     def createSave(self,model):
         try:
             print("ATTEMPTINGSAVE")
@@ -27,10 +31,15 @@ class modelReader:
         except:
             print("SAVE FAILED")
             return False
+        
+
     def loadSave(self):
         print("Trying to Load Model")
         self.model = models.load_model('my_model.keras')
         print("Loaded Model")
+        with open("statFile.txt",'r') as statFile:
+            self.trainedMean = float(statFile.readline())
+            self.trainedSTD = float(statFile.readline())
         return True
     
     
@@ -43,7 +52,6 @@ class modelReader:
         data,labels = self.loadData(datalink)  # 30000,23 | 30000,1
 
         #Standarize data. 
-
         data = np.transpose(data)
         for i in data:
             mean = np.mean(i)
@@ -51,6 +59,18 @@ class modelReader:
             for num in range(len(i)):
                 i[num] = (i[num] - mean) / std
         data = np.transpose(data)
+        with open("statFile.txt",'w') as statFile:
+            statFile.write(str(mean) + "\n")
+            statFile.write(str(std))
+
+
+        #Update mean and std
+        self.trainedMean = mean
+        print(self.trainedMean)
+        self.trainedSTD = std
+        print(self.trainedSTD)
+    
+
 
 
         #Split into eval and training data
@@ -86,10 +106,16 @@ class modelReader:
 
         return "Recived from File"
 
-
+    def standarize(self, data):
+        data = np.transpose(data)
+        for i in data:
+            for num in range(len(i)):
+                i[num] = (i[num] - self.trainedMean) / self.trainedSTD
+        data = np.transpose(data)
+        return data
+        
 
     def evaluate(self, dataEVAL,labelEVAL,data,labels):
-
         results = self.model.evaluate(dataEVAL,labelEVAL)
         print(results)
         predict3 = self.model.predict(data)
@@ -112,6 +138,8 @@ class modelReader:
         pass
 
     def predict(self,data):
+        #I THINK I HAVE TO STANDARIZE THE DATA. PROBABLY HAVE TO UNSTANDARIZE THE RESULTS. 
+        data = self.standarize(data)
         prediction = self.model.predict(data)
         return prediction
 

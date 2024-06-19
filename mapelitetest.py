@@ -9,8 +9,8 @@ class Individual:
     def __init__(self, paramList,runner) -> None:
         self.runner = runner
         self.param = paramList
-        self.fitness = self.runner.Fitness(paramList)
-        self.elite = self.runner.behaviour(paramList)
+        self.fitness = 0
+        self.elite = self.runner.behaviour(self)
         self.classifyVal = 0
 
     def __str__(self):
@@ -20,6 +20,8 @@ class Individual:
         return self.param
     def getFitness(self):
         return self.fitness
+    def getClassifier(self):
+        return self.classifyVal
     
     def mutate(self):
         #change a bit of the individual, rarely. 
@@ -31,7 +33,10 @@ class Individual:
         return 
     
     def determineBehaviour(self):
-        self.elite = self.runner.behaviour(self.param)
+        self.elite = self.runner.behaviour(self)
+        return
+    def determineFitness(self):
+        self.fitness = self.runner.Fitness(self)
         return
     
     def classify(self, classifier):
@@ -39,7 +44,6 @@ class Individual:
         try:
             # print("Type of Param: " + str(type(np.array(self.param))))
             # print("Shape: " + str(np.array([self.param]).shape))
-
 
             value = classifier.predict(np.array([self.param]))
             self.classifyVal = value
@@ -49,6 +53,8 @@ class Individual:
         except:
             print("Classify Failed")
             return False
+        
+
 
     
 
@@ -176,8 +182,8 @@ class MapEliteRunner:
         baby = Individual(newList, self)
         baby.mutate()
         baby.determineBehaviour()
-
         baby.classify(self.classifier)
+        baby.determineFitness()
 
         return baby
         
@@ -229,21 +235,31 @@ class MapEliteRunner:
             return ind1
         
 
-    def Fitness(self, indList):
+    def Fitness(self, ind):
         #4 Way maximization function
         #Validity, Proximity, Scarcisty, Plausibility. 
         result = 0
         #Validity, 
-        
+        validityval = ind.getClassifier()
         #Proximity, 
+        indList = ind.getList()
+        resultList = []
+        for i in range(len(indList)):
+            resultList.append(indList[i] - self.originalList)
+        proximityval = sum(resultList)
+
+        print(validityval)
+        print(proximityval)
+        result = validityval + proximityval
 
 
         return result
 
 
-    def behaviour(self, indList):
+    def behaviour(self, ind):
         #Determine which section to
-        #Returns a tuple of the location of the cell this individual is at.   
+        #Returns a tuple of the location of the cell this individual is at.  
+        indList = ind.getList() 
         x = self.Section(xDimension,indList)
         y = self.Section(yDimension,indList)
         location = (x,y)
