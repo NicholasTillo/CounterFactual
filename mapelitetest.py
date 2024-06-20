@@ -320,7 +320,7 @@ actionable = [False,False,False,True, True, False,True,True,True,True,
               True,True]
 
 resolution = 8
-iteration = 100000
+iteration = 10000
 
 xDimension = "NumActionableChanges"
 yDimension = "NumInactionableChanges"
