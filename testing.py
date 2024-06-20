@@ -16,6 +16,7 @@ import deeplearningmodel
 #print(len([False,False,False,True, True, False,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True]))
 
 Model = deeplearningmodel.modelReader()
+data, labels = Model.loadData("link")
 Model.createModel("Data\default_of_credit_card_clients.csv")
 
 # print("Actual One: " + str(Model.predict(np.array([[20000, 2, 2, 1, 24, 2, 2, -1, -1, -2, -2, 3913, 3102, 689, 0, 0, 0, 0, 689, 0, 0, 0, 0]]))))
@@ -25,7 +26,13 @@ Model.createModel("Data\default_of_credit_card_clients.csv")
 # print("Coutnerfactual 2:" + str(Model.predict([22000.0, 2, 2.2, 1.1, 24, 2.2, 2, -1.1, -1.1, -2, -2.4200000000000004, 4304.3, 3412.2, 757.9, 0, 0.0, 0.0, 0.0, 689, 0, 0.0, 0, 0])))
 # print("Coutnerfactual 3:" + str(Model.predict([22000.0, 2, 2.2, 1.1, 24, 2, 2.2, -1, -1, -2, -2.2, 3913, 3412.2, 757.9, 0, 0.0, 0.0, 0.0, 689, 0, 0, 0, 0])))
 
-# print(len([90000,2,2,2,34,0,0,0,0,0,0,29239,14027,13559,14331,14948,15549,1518,1500,1000,1000,1000,5000]))
-print("Actual One: " + str(Model.predict(np.array([[90000,2,2,2,34,0,0,0,0,0,0,29239,14027,13559,14331,14948,15549,1518,1500,1000,1000,1000,5000]]))))
-print("Actual One: " + str(Model.predict(np.array([[500000,1,1,2,29,0,0,0,0,0,0,367965,412023,445007,542653,483003,473944,55000,40000,38000,20239,13750,13770]]))))
+#print(len([90000,2,2,2,34,0,0,0,0,0,0,29239,14027,13559,14331,14948,15549,1518,1500,1000,1000,1000,5000]))
+#print("Actual One: " + str(Model.predict(np.array([[90000,2,2,2,34,0,0,0,0,0,0,29239,14027,13559,14331,14948,15549,1518,1500,1000,1000,1000,5000]]))))
+# print("Actual One: " + str(Model.predict(np.array([[450000,2,1,1,40,-2,-2,-2,-2,-2,-2,5512,19420,1473,560,0,0,19428,1473,560,0,0,1128]]))))
+#print("Actual One: " + str(Model.predict(np.array([[50000,1,2,1,46,0,0,0,0,0,0,47929,48905,49764,36535,32428,15313,2078,1800,1430,1000,1000,1000]]))))
+print("Actual One: " + str(Model.predict(np.array([[50000,1,2,1,46,0,0,0,0,0,0,47929,48905,49764,36535,32428,15313,2078,1800,1430,1000,1000,1000]]))))
 
+#print("Actual One: " + str(Model.predict(data)))
+##result = Model.predict([[50000,1,2,1,46,0,0,0,0,0,0,47929,48905,49764,36535,32428,15313,2078,1800,1430,1000,1000,1000]])
+##for i,j in zip(result, labels):
+ #   print("Predicted: "+ str(i[0]) + ", Actual: " +str(j[0]) )

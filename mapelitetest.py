@@ -29,7 +29,8 @@ class Individual:
             num = random.random()
             if num < self.runner.mutationrate:
                 self.param[i] += self.param[i] * (random.random()*0.4)
-                print("mutate")
+
+                #print("mutate")
         return 
     
     def determineBehaviour(self):
@@ -47,11 +48,10 @@ class Individual:
 
             value = classifier.predict(np.array([self.param]))
             self.classifyVal = value
-            print(type(value[0][0]))
-            print("Classified Fine")
+            #print("Classified Fine")
             return True
         except:
-            print("Classify Failed")
+            #print("Classify Failed")
             return False
         
 
@@ -118,6 +118,11 @@ class Grid:
 
         #print("Current Count is: " + str(count))
         return count
+    def remove(self, ind):
+        # print(self.inside)
+        del self.inside[ind]
+        # print(self.inside)
+        return
 
 
 
@@ -229,8 +234,12 @@ class MapEliteRunner:
             return ind2
         elif type(ind2) is not Individual:
             return ind1
-        elif ind1.fitness < ind2.fitness: 
+        
+        elif ind1.getFitness() < ind2.getFitness(): 
+            #Remove Ind1 from the map and inside. 
+            self.map.remove(ind1)
             return ind2
+        
         else:
             return ind1
         
@@ -244,13 +253,16 @@ class MapEliteRunner:
         #Proximity, 
         indList = ind.getList()
         resultList = []
-        for i in range(len(indList)):
-            resultList.append(indList[i] - self.originalList)
-        proximityval = sum(resultList)
 
-        print(validityval)
-        print(proximityval)
-        result = validityval + proximityval
+        standardizedIndList = self.classifier.standarize(indList)
+        standardizedOrgList = self.classifier.standarize(self.originalList)
+
+        for i in range(len(indList)):
+            resultList.append(np.abs((standardizedIndList[i] - standardizedOrgList[i])))
+        proximityval = sum(resultList)
+        #print(proximityval)
+
+        result = (1-validityval) - proximityval/10
 
 
         return result
@@ -283,7 +295,12 @@ class MapEliteRunner:
             for i in allInst:
                 countj = 0
                 for j in i:
-                    output.write("Counterfactual at location: " + str(counti) + "," + str(countj)+ ": "+ str(j) + "\n")
+                    if j == None:
+                        output.write("Counterfactual at location: " + str(counti) + "," + str(countj)+ ": "+ str(j) +"\n")
+                    else:
+                        output.write("Counterfactual at location: " + str(counti) + "," + str(countj)+ ": "+ str(j) + " Fitness: "+ str(j.fitness) +"\n")
+
+                    
                     countj+=1
                 counti+=1
 
@@ -293,8 +310,8 @@ class MapEliteRunner:
 
 
 #The userinput is the inputted 
-userInput = [20000,2,2,1,24,2,2,-1,-1,-2,-2,3913,3102,689,0,0,0,0,689,0,0,0,0]
-userInputClone = [20000,2,2,1,24,2,2,-1,-1,-2,-2,3913,3102,689,0,0,0,0,689,0,0,0,0]
+userInput = [50000,1,2,1,46,0,0,0,0,0,0,47929,48905,49764,36535,32428,15313,2078,1800,1430,1000,1000,1000]
+userInputClone = [50000,1,2,1,46,0,0,0,0,0,0,47929,48905,49764,36535,32428,15313,2078,1800,1430,1000,1000,1000]
 
 
 #Get whether if the conditions are actionable or not.
@@ -303,7 +320,7 @@ actionable = [False,False,False,True, True, False,True,True,True,True,
               True,True]
 
 resolution = 8
-iteration = 100
+iteration = 100000
 
 xDimension = "NumActionableChanges"
 yDimension = "NumInactionableChanges"
@@ -320,24 +337,30 @@ mutationRate = 0.05
 runner = MapEliteRunner(mutationRate,x,Model,userInput)
 testind1 = Individual(userInputClone, runner)
 
+testind1.determineBehaviour()
+testind1.classify(runner.classifier)
+#print("HERE")
 
+testind1.determineFitness()
+#print(testind1.getFitness())
 runner.checkElite(testind1)
 
-maxClass = 0.3
+maxClass = 0.5
 
 for i in range(iteration):
-    print("Iteration: "+str(i))
+    if i % 100 == 0:
+        print("Iteration: "+str(i))
+    #print("Iteration: "+str(i))
     #Select Parent
     #Genetic Variation
     #Development & evaluation
     #Determine Niche
     child = runner.generateChild()
-    print(child.classifyVal)
     #Compete With Niece, replacement on victory. 
     if child.classifyVal < maxClass:
         runner.checkElite(child)
     else:
-        print("Failed Classify")
+        runner.checkElite(child)
     pass
 
 

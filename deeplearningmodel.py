@@ -107,12 +107,21 @@ class modelReader:
         return "Recived from File"
 
     def standarize(self, data):
-        data = np.transpose(data)
-        for i in data:
-            for num in range(len(i)):
-                i[num] = (i[num] - self.trainedMean) / self.trainedSTD
-        data = np.transpose(data)
+        if type(data[0]) == np.array or type(data[0]) == list:
+            data = np.transpose(data)
+            for i in data:
+                for num in range(len(i)):
+                    i[num] = (i[num] - self.trainedMean) / self.trainedSTD
+            data = np.transpose(data)
+        else:
+            data = np.transpose(data)
+            for num in range(len(data)):
+                data[num] = (data[num] - self.trainedMean) / self.trainedSTD
+            data = np.transpose(data)
+        
+        
         return data
+        
         
 
     def evaluate(self, dataEVAL,labelEVAL,data,labels):
@@ -139,8 +148,8 @@ class modelReader:
 
     def predict(self,data):
         #I THINK I HAVE TO STANDARIZE THE DATA. PROBABLY HAVE TO UNSTANDARIZE THE RESULTS. 
-        data = self.standarize(data)
-        prediction = self.model.predict(data)
+        # data = self.standarize(data)
+        prediction = self.model.predict(data, verbose = 0)
         return prediction
 
     def loadData(self,datalink):
