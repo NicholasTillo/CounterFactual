@@ -8,8 +8,7 @@ import csv
 class modelReader:
     def __init__(self) -> None:
         self.model=None
-        self.trainedMean = 0
-        self.trainedSTD = 0
+
         pass
 
         
@@ -37,9 +36,6 @@ class modelReader:
         print("Trying to Load Model")
         self.model = models.load_model('my_model.keras')
         print("Loaded Model")
-        with open("statFile.txt",'r') as statFile:
-            self.trainedMean = float(statFile.readline())
-            self.trainedSTD = float(statFile.readline())
         return True
     
     
@@ -53,25 +49,17 @@ class modelReader:
 
         #Standarize data. 
         data = np.transpose(data)
-        for i in data:
-            mean = np.mean(i)
-            std = np.std(i)
-            for num in range(len(i)):
-                i[num] = (i[num] - mean) / std
-        data = np.transpose(data)
         with open("statFile.txt",'w') as statFile:
-            statFile.write(str(mean) + "\n")
-            statFile.write(str(std))
+            for i in data:
+                mean = np.mean(i)
+                std = np.std(i)
+                for num in range(len(i)):
+                    i[num] = (i[num] - mean) / std
+                    
+                statFile.write(str(mean) +","+str(std)+ "\n")
 
-
-        #Update mean and std
-        self.trainedMean = mean
-        print(self.trainedMean)
-        self.trainedSTD = std
-        print(self.trainedSTD)
-    
-
-
+        data = np.transpose(data)
+        
 
         #Split into eval and training data
         split = -5000
@@ -97,7 +85,7 @@ class modelReader:
         model.compile(optimizer='adam', loss= tf.keras.losses.BinaryCrossentropy(), metrics=['accuracy'])
 
         # Training the model
-        model.fit(data, labels, epochs=20, batch_size=16, validation_split=0.2)
+        model.fit(data, labels, epochs=400, batch_size=8, validation_split=0.2)
         self.model = model
 
 
@@ -107,18 +95,22 @@ class modelReader:
         return "Recived from File"
 
     def standarize(self, data):
-        if type(data[0]) == np.array or type(data[0]) == list:
-            data = np.transpose(data)
-            for i in data:
-                for num in range(len(i)):
-                    i[num] = (i[num] - self.trainedMean) / self.trainedSTD
-            data = np.transpose(data)
-        else:
-            data = np.transpose(data)
-            for num in range(len(data)):
-                data[num] = (data[num] - self.trainedMean) / self.trainedSTD
-            data = np.transpose(data)
-        
+        with open("statFile.txt",'r') as statFile:
+            mean, std = statFile.readline().split(",")
+            
+            mean = float(mean)
+            std = float(std)
+            if type(data[0]) == np.array or type(data[0]) == list:
+                data = np.transpose(data)
+                for i in data:
+                    for num in range(len(i)):
+                        i[num] = (i[num] - mean) / std
+                data = np.transpose(data)
+            else:
+                data = np.transpose(data)
+                for num in range(len(data)):
+                    data[num] = (data[num] - mean) / std
+                data = np.transpose(data)
         
         return data
         
@@ -148,7 +140,7 @@ class modelReader:
 
     def predict(self,data):
         #I THINK I HAVE TO STANDARIZE THE DATA. PROBABLY HAVE TO UNSTANDARIZE THE RESULTS. 
-        # data = self.standarize(data)
+        #data = self.standarize(data)
         prediction = self.model.predict(data, verbose = 0)
         return prediction
 

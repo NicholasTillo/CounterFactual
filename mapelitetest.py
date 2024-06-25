@@ -3,6 +3,8 @@ import random
 import deeplearningmodel
 import seaborn as sns
 import matplotlib.pyplot as plt
+import gower
+
 
 #Import in a second. 
 class Individual:
@@ -28,30 +30,59 @@ class Individual:
         for i in range(len(self.param)):
             num = random.random()
             if num < self.runner.mutationrate:
-                self.param[i] += self.param[i] * (random.random()*0.4)
+                value = self.runner.featureSpaceLists[i]
+                #print(value)
+                #print(type(value))
+                if type(value) == list:
+                    #If this feature space is defined to be descrite and ordered, chose an option above or below and apply it.
+                    randIndex = value.index(self.param[i])
 
-                #print("mutate")
+                    
+                    if random.random() < 0.5 and (randIndex + 1 < len(value)):
+                        #If we are able to go up, 
+                        self.param[i] = value[randIndex + 1]
+                    elif(randIndex > 0):
+                        #If we are able to go down, 
+                        self.param[i] = value[randIndex - 1]
+
+
+                elif type(value) == set:
+                    #If this feature space is defined to be descrit, chose an option randomly.
+                    randIndex = (random.random() * len(value))
+                    self.param[i] = value[randIndex]
+
+                elif type(value) == type:
+                    #If the range is a specific data type. 
+                    if value == int:
+                        #When reaching an integer, mutate by an amount up to 10% of the standard deviation. 
+
+                        with open("statFile.txt",'r') as statFile:
+                            #Find the mean and standard deivation
+                            mean, std = statFile.readlines()[i].split(",")
+                            if num < (self.runner.mutationrate/2):
+                                #Chose wether to increase or decrease the number. 
+                                self.param[i] += int(float(std) * (random.random()*0.1))
+                            else:
+                                self.param[i] -= int(float(std) * (random.random()*0.1))
         return 
     
     def determineBehaviour(self):
+        #Determine and set the behaviour of the individual
         self.elite = self.runner.behaviour(self)
         return
+    
     def determineFitness(self):
+        #Determine and set the fitness of the individual
         self.fitness = self.runner.Fitness(self)
         return
     
     def classify(self, classifier):
-        # print("HERE")
+        #Attempt to classify the individual using the runners classifier. 
         try:
-            # print("Type of Param: " + str(type(np.array(self.param))))
-            # print("Shape: " + str(np.array([self.param]).shape))
-
             value = classifier.predict(np.array([self.param]))
             self.classifyVal = value
-            #print("Classified Fine")
             return True
         except:
-            #print("Classify Failed")
             return False
         
 
@@ -62,17 +93,22 @@ class Individual:
 class Grid:
     
     def __init__(self, resolution, XDimen, YDimen) -> None:
+        #Numpy array object storage
         self.grid =  np.empty(shape=(resolution,resolution), dtype=Individual)
-        #What do the dimensions mean?
+
+        #Description of what the dimensions mean, Should be an ENUM. 
         self.xDim = XDimen
         self.yDimen = YDimen
         #How many elites per dimension. 
         self.resolution = resolution
+        #Hashmap used for faster lookup 
         self.inside = {}
 
     def __str__(self) -> str:
         return str(self.grid)
+    
     def initGrid(self):
+        #Does Nothing
         #self.grid.fill(1)
         pass
 
@@ -84,6 +120,7 @@ class Grid:
     
 
     def set(self, location, item):
+        #Set 1 section of the grid, update the hashmap accordingy. 
         try:
             self.grid[location] = item
             self.inside[item] = location
@@ -92,15 +129,20 @@ class Grid:
             return False
         
     def get(self, location):
+        #Recive the individual at a specific location. 
+        #I think requires a tuple. 
         try:
             return self.grid[location]
         except:
             return False
         
     def getGrid(self):
+        #Returns the whole grid object. 
         return self.grid
     
     def getFitnessGrid(self):
+        #Returns a 2D grid of the corresponing fitness's of the individuals that inhabit that elite. 
+        #Used in the display
         clone =  np.empty(shape=(self.resolution,self.resolution), dtype=float)
         for i in range(self.grid.shape[0]):
             for j in range(self.grid.shape[1]):
@@ -110,29 +152,45 @@ class Grid:
         return clone
     
     def updateNumElite(self):
+        #Update the number of elites that are currently in the grid. 
+        #Very pricy, 
+        #Should cut this down. 
         count = 0
         for i in self.grid:
             for j in i:
                 if j is not None:
                     count += 1
 
-        #print("Current Count is: " + str(count))
         return count
+    
+
     def remove(self, ind):
-        # print(self.inside)
+        #Remove an individual from the internal hashmap
         del self.inside[ind]
-        # print(self.inside)
         return
 
 
 
 class MapEliteRunner:
-    def __init__(self,mutationRate,map, classifier,originalList) -> None:
+    def __init__(self,mutationRate,map, classifier,originalList, descriptorList, featureSpaceList) -> None:
+        #Self Explanitory
         self.mutationrate = mutationRate
+
+        #Stores the grid object that stores individuals. 
         self.map = map
+
+        #Current number of elites 
         self.numElites = 0
+        #Classifier Object
         self.classifier = classifier
+        #Original List, that we are generating the counterfactuals for
         self.originalList = originalList
+        #Original classification for the original list, to see if we are wasting our time. 
+        self.originalClassifier = classifier.predict(np.array([originalList]))
+        #A list that describes if each feature is qualitative or quantitivatie. 
+        self.descriptorList = descriptorList
+        #2D array that describes the feature spaces for each feature. 
+        self.featureSpaceLists = featureSpaceList
         pass
 
 
@@ -247,10 +305,19 @@ class MapEliteRunner:
     def Fitness(self, ind):
         #4 Way maximization function
         #Validity, Proximity, Scarcisty, Plausibility. 
-        result = 0
+
+        sparsity = 0
         #Validity, 
         validityval = ind.getClassifier()
-        #Proximity, 
+
+
+        #Proximity, getting Distnace: using Gower distance Function
+        #For each measure, 
+        #If its qualitative, then use the Dice Distance, 
+        #If its numeric, use manhatten distnace. 
+        #I
+
+        
         indList = ind.getList()
         resultList = []
 
@@ -258,11 +325,52 @@ class MapEliteRunner:
         standardizedOrgList = self.classifier.standarize(self.originalList)
 
         for i in range(len(indList)):
-            resultList.append(np.abs((standardizedIndList[i] - standardizedOrgList[i])))
-        proximityval = sum(resultList)
-        #print(proximityval)
+            subtraction = 0
+            if self.descriptorList[i] == "Quantitative": 
+                #Do Range Normalized Manhattan Distance. 
+                #print(standardizedOrgList[i])
+                
+                subtraction = (np.abs((standardizedIndList[i] - standardizedOrgList[i])))
+                #print(np.abs((standardizedIndList[i] - standardizedOrgList[i])) / standardizedOrgList[i])
+            elif self.descriptorList[i] == "Qualitative":
+                #Do Dice Distnace, 
+                if standardizedIndList[i] == standardizedOrgList[i]:
+                    #If they are the same, there is no distnace, 
+                    subtraction = 0
+                else:
+                    #If they are not the same. 
+                    print("they are not the same")
+                    subtraction = 1
 
-        result = (1-validityval) - proximityval/10
+            #if subtraction == 0:
+            #    sparsity += 1
+            resultList.append(subtraction)
+        
+        #print(resultList)
+        proximityval = (1 - (sum(resultList) / len(indList) ))
+        #print(resultList)
+
+
+
+
+        #Plausibility
+        plausibiltiy  = 0
+        #Loop through the data, and find the cloest k neighbours. 
+
+        #Should describe a realisitc data instance, 
+        #Find the closest k neighbours within the datast. 
+
+
+        #Sparsity
+        #sparsity = sparsity/len(indList)
+        sparsity = 0
+        #Should vary from x* in only a few features.  
+        #print(standardizedIndList)
+        #print(standardizedOrgList)
+        #print(resultList)
+        #print("vailidty Value: " + str(validityval))
+        #print("Proximity Value: " + str(proximityval))
+        result = (1-validityval) + (proximityval) + plausibiltiy + sparsity
 
 
         return result
@@ -280,15 +388,17 @@ class MapEliteRunner:
 
 
     def showPlot(self):
-        sns.heatmap(self.map.getFitnessGrid(), annot=True, cmap='viridis')
+        plot = sns.heatmap(self.map.getFitnessGrid(), annot=True, cmap='viridis')
         plt.title('Heatmap of 2D Numpy Array')
         plt.show()
+        plot = plot.get_figure()
+        plot.savefig("figure.png")
         return
 
     def showAllCFs(self):
         allInst = self.map.getGrid()
         with open("outputfile.txt", 'w') as output:
-            output.write("Original Input: "+ str(self.originalList) + "\n")
+            output.write("Original Input: "+ str(self.originalList) + "Original Label: "+ str(self.originalClassifier) +"\n")
 
             counti = 0
 
@@ -298,7 +408,7 @@ class MapEliteRunner:
                     if j == None:
                         output.write("Counterfactual at location: " + str(counti) + "," + str(countj)+ ": "+ str(j) +"\n")
                     else:
-                        output.write("Counterfactual at location: " + str(counti) + "," + str(countj)+ ": "+ str(j) + " Fitness: "+ str(j.fitness) +"\n")
+                        output.write("Counterfactual at location: " + str(counti) + "," + str(countj)+ ": "+ str(j) + " Fitness: "+ str(j.fitness) +" Classifier Val: " +str(j.getClassifier()) +"\n")
 
                     
                     countj+=1
@@ -309,17 +419,44 @@ class MapEliteRunner:
 
 
 
-#The userinput is the inputted 
-userInput = [50000,1,2,1,46,0,0,0,0,0,0,47929,48905,49764,36535,32428,15313,2078,1800,1430,1000,1000,1000]
-userInputClone = [50000,1,2,1,46,0,0,0,0,0,0,47929,48905,49764,36535,32428,15313,2078,1800,1430,1000,1000,1000]
+#The userinput is the inputted FOR THE LOAN APPLICATION SETTING. 
+
+userInput = [50000,1,1,2,29,2,2,2,2,2,2,24987,24300,26591,25865,27667,28264,0,2700,0,2225,1200,0]
+userInputClone = [50000,1,1,2,29,2,2,2,2,2,2,24987,24300,26591,25865,27667,28264,0,2700,0,2225,1200,0]
+DescriptorList = ["Quantitative","Qualitative","Qualitative","Qualitative","Quantitative","Qualitative","Qualitative","Qualitative",
+                  "Qualitative","Qualitative","Qualitative","Quantitative","Quantitative","Quantitative","Quantitative","Quantitative",
+                  "Quantitative","Quantitative","Quantitative","Quantitative","Quantitative","Quantitative","Quantitative"]
 
 
+featureSpaceLists= [int,
+                    [1,2],
+                    [1,2,3,4],
+                    [1,2,3],
+                    int,
+                    [-1,1,2,3,4,5,6,7,8,9],
+                    [-1,1,2,3,4,5,6,7,8,9],
+                    [-1,1,2,3,4,5,6,7,8,9],
+                    [-1,1,2,3,4,5,6,7,8,9],
+                    [-1,1,2,3,4,5,6,7,8,9],
+                    [-1,1,2,3,4,5,6,7,8,9],
+                    int,
+                    int,
+                    int,
+                    int,
+                    int,
+                    int,
+                    int,
+                    int,
+                    int,
+                    int,
+                    int,
+                    int]
 #Get whether if the conditions are actionable or not.
 actionable = [False,False,False,True, True, False,True,True,True,True,
               True,True,True,True,True,True,True,True,True,True,True,
               True,True]
 
-resolution = 8
+resolution = 12
 iteration = 10000
 
 xDimension = "NumActionableChanges"
@@ -334,7 +471,7 @@ Model = deeplearningmodel.modelReader()
 Model.createModel("Data\default_of_credit_card_clients.csv")
 mutationRate = 0.05
 
-runner = MapEliteRunner(mutationRate,x,Model,userInput)
+runner = MapEliteRunner(mutationRate,  x,  Model,  userInput,  DescriptorList,  featureSpaceLists)
 testind1 = Individual(userInputClone, runner)
 
 testind1.determineBehaviour()
@@ -366,6 +503,7 @@ for i in range(iteration):
 
 #Visualize
 print(runner)
+
 runner.showPlot()
 print("Total Number Of Elites: " + str(runner.map.updateNumElite()))
 runner.showAllCFs()

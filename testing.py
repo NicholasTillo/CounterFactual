@@ -36,5 +36,50 @@ Model.createModel("Data\default_of_credit_card_clients.csv")
 ##result = Model.predict([[50000,1,2,1,46,0,0,0,0,0,0,47929,48905,49764,36535,32428,15313,2078,1800,1430,1000,1000,1000]])
 ##for i,j in zip(result, labels):
  #   print("Predicted: "+ str(i[0]) + ", Actual: " +str(j[0]) )
+# 
+# print(len([50000.36982232727, 5595.900087337819, 5260.311762193608, 1, 46, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 47929, 48905, 49764, 37608.11958899026, 32428, 15313, 5363.133481308545, 5440.513345646703, 5219.36159778346, 5265.217255061664, 5246.38568121507, 5215.391474809184]  ))
+# data, labels = Model.loadData("Data\default_of_credit_card_clients.csv")
 
-print(len([50000.36982232727, 5595.900087337819, 5260.311762193608, 1, 46, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 47929, 48905, 49764, 37608.11958899026, 32428, 15313, 5363.133481308545, 5440.513345646703, 5219.36159778346, 5265.217255061664, 5246.38568121507, 5215.391474809184]  ))
+# for i,j in zip(data,labels):
+#     prediction = Model.predict(np.array([i]))
+#     print(str(prediction)+","+ str(j))
+#     #print(i)
+
+
+
+featureSpaceLists= [int,
+                    [1,2],
+                    [1,2,3,4],
+                    [1,2,3],
+                    int,
+                    [-1,1,2,3,4,5,6,7,8,9],
+                    [-1,1,2,3,4,5,6,7,8,9],
+                    [-1,1,2,3,4,5,6,7,8,9],
+                    [-1,1,2,3,4,5,6,7,8,9],
+                    [-1,1,2,3,4,5,6,7,8,9],
+                    [-1,1,2,3,4,5,6,7,8,9],
+                    int,
+                    int,
+                    int,
+                    int,
+                    int,
+                    int,
+                    int,
+                    int,
+                    int,
+                    int,
+                    int,
+                    int]
+DescriptorList = ["Quantitative","Qualitative","Qualitative","Qualitative","Quantitative","Qualitative","Qualitative","Qualitative",
+                  "Qualitative","Qualitative","Qualitative","Quantitative","Quantitative","Quantitative","Quantitative","Quantitative",
+                  "Quantitative","Quantitative","Quantitative","Quantitative","Quantitative","Quantitative","Quantitative"]
+# print(featureSpaceLists[0])/
+# print(type(featureSpaceLists[0]))
+result = []
+for i in DescriptorList:
+    if i == "Quantitative":
+        result.append(0)
+    else: 
+        result.append(1)
+    
+print(result)
