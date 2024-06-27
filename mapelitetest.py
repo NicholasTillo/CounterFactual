@@ -3,7 +3,6 @@ import random
 import deeplearningmodel
 import seaborn as sns
 import matplotlib.pyplot as plt
-import gower
 
 
 #Import in a second. 
@@ -59,11 +58,12 @@ class Individual:
                         with open("statFile.txt",'r') as statFile:
                             #Find the mean and standard deivation
                             mean, std = statFile.readlines()[i].split(",")
-                            if num < (self.runner.mutationrate/2):
+                            number = int(float(std) * (random.random()*0.1))
+                            if num < (self.runner.mutationrate/2) and self.param[i] < number:
                                 #Chose wether to increase or decrease the number. 
-                                self.param[i] += int(float(std) * (random.random()*0.1))
+                                self.param[i] += number 
                             else:
-                                self.param[i] -= int(float(std) * (random.random()*0.1))
+                                self.param[i] -= number
         return 
     
     def determineBehaviour(self):
@@ -92,15 +92,17 @@ class Individual:
 
 class Grid:
     
-    def __init__(self, resolution, XDimen, YDimen) -> None:
+    def __init__(self, resolutionx, resolutiony, XDimen, YDimen) -> None:
         #Numpy array object storage
-        self.grid =  np.empty(shape=(resolution,resolution), dtype=Individual)
+        self.grid =  np.empty(shape=(resolutionx,resolutiony), dtype=Individual)
 
         #Description of what the dimensions mean, Should be an ENUM. 
         self.xDim = XDimen
         self.yDimen = YDimen
         #How many elites per dimension. 
-        self.resolution = resolution
+        self.resolutionx = resolutionx
+        self.resolutiony = resolutiony
+
         #Hashmap used for faster lookup 
         self.inside = {}
 
@@ -143,7 +145,7 @@ class Grid:
     def getFitnessGrid(self):
         #Returns a 2D grid of the corresponing fitness's of the individuals that inhabit that elite. 
         #Used in the display
-        clone =  np.empty(shape=(self.resolution,self.resolution), dtype=float)
+        clone =  np.empty(shape=(self.resolutionx,self.resolutiony), dtype=float)
         for i in range(self.grid.shape[0]):
             for j in range(self.grid.shape[1]):
                if self.grid[i][j] is not None:
@@ -321,8 +323,8 @@ class MapEliteRunner:
         indList = ind.getList()
         resultList = []
 
-        standardizedIndList = self.classifier.standarize(indList)
-        standardizedOrgList = self.classifier.standarize(self.originalList)
+        #standardizedIndList = self.classifier.standarize(indList)
+        #standardizedOrgList = self.classifier.standarize(self.originalList)
 
         for i in range(len(indList)):
             subtraction = 0
@@ -330,17 +332,32 @@ class MapEliteRunner:
                 #Do Range Normalized Manhattan Distance. 
                 #print(standardizedOrgList[i])
                 
-                subtraction = (np.abs((standardizedIndList[i] - standardizedOrgList[i])))
+                #subtraction = (np.abs((standardizedIndList[i] - standardizedOrgList[i])))
+                if indList[i] == self.originalList[i]:
+                    subtraction = 0
+                elif indList[i] == 0 or self.originalList[i] == 0:
+                    sparsity += 1
+                    subtraction = 1
+                elif indList[i] > self.originalList[i]:
+                    sparsity += 1
+                    subtraction = (np.abs((indList[i] - self.originalList[i]))/indList[i])
+                elif indList[i] < self.originalList[i]:
+                    sparsity += 1
+                    subtraction = (np.abs((indList[i] - self.originalList[i]))/self.originalList[i])
+                
+
                 #print(np.abs((standardizedIndList[i] - standardizedOrgList[i])) / standardizedOrgList[i])
             elif self.descriptorList[i] == "Qualitative":
                 #Do Dice Distnace, 
-                if standardizedIndList[i] == standardizedOrgList[i]:
+                # if standardizedIndList[i] == standardizedOrgList[i]:
+                if indList[i] ==  self.originalList[i]:
+
                     #If they are the same, there is no distnace, 
                     subtraction = 0
                 else:
                     #If they are not the same. 
-                    print("they are not the same")
                     subtraction = 1
+                    sparsity += 1
 
             #if subtraction == 0:
             #    sparsity += 1
@@ -362,8 +379,8 @@ class MapEliteRunner:
 
 
         #Sparsity
-        #sparsity = sparsity/len(indList)
-        sparsity = 0
+        sparsity =  - (sparsity/len(indList))
+        #sparsity = 0
         #Should vary from x* in only a few features.  
         #print(standardizedIndList)
         #print(standardizedOrgList)
@@ -398,10 +415,12 @@ class MapEliteRunner:
     def showAllCFs(self):
         allInst = self.map.getGrid()
         with open("outputfile.txt", 'w') as output:
+            output.write(",X1,X2,X3,X4,X5,X6,X7,X8,X9,X10,X11,X12,X13,X14,X15,X16,X17,X18,X19,X20,X21,X22,X23,Y\n" )
+            output.write("ID,LIMIT_BAL,SEX,EDUCATION,MARRIAGE,AGE,PAY_0,PAY_2,PAY_3,PAY_4,PAY_5,PAY_6,BILL_AMT1,BILL_AMT2,BILL_AMT3,BILL_AMT4,BILL_AMT5,BILL_AMT6,PAY_AMT1,PAY_AMT2,PAY_AMT3,PAY_AMT4,PAY_AMT5,PAY_AMT6,default payment next month\n")
+
             output.write("Original Input: "+ str(self.originalList) + "Original Label: "+ str(self.originalClassifier) +"\n")
 
             counti = 0
-
             for i in allInst:
                 countj = 0
                 for j in i:
@@ -456,14 +475,16 @@ actionable = [False,False,False,True, True, False,True,True,True,True,
               True,True,True,True,True,True,True,True,True,True,True,
               True,True]
 
-resolution = 12
+resolutionx = 21
+resolutiony = 6
+
 iteration = 10000
 
 xDimension = "NumActionableChanges"
 yDimension = "NumInactionableChanges"
 
 #Create empty grid. 
-x = Grid(resolution, xDimension, yDimension)
+x = Grid(resolutionx, resolutiony, xDimension, yDimension)
 x.initGrid()
 
 #Create some test individuals. 
