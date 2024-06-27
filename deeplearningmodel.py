@@ -85,7 +85,7 @@ class modelReader:
         model.compile(optimizer='adam', loss= tf.keras.losses.BinaryCrossentropy(), metrics=['accuracy'])
 
         # Training the model
-        model.fit(data, labels, epochs=400, batch_size=8, validation_split=0.2)
+        model.fit(data, labels, epochs=200, batch_size=16, validation_split=0.1)
         self.model = model
 
 

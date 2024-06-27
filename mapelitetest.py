@@ -98,7 +98,7 @@ class Grid:
 
         #Description of what the dimensions mean, Should be an ENUM. 
         self.xDim = XDimen
-        self.yDimen = YDimen
+        self.yDim = YDimen
         #How many elites per dimension. 
         self.resolutionx = resolutionx
         self.resolutiony = resolutiony
@@ -146,6 +146,7 @@ class Grid:
         #Returns a 2D grid of the corresponing fitness's of the individuals that inhabit that elite. 
         #Used in the display
         clone =  np.empty(shape=(self.resolutionx,self.resolutiony), dtype=float)
+        clone.fill(0)
         for i in range(self.grid.shape[0]):
             for j in range(self.grid.shape[1]):
                if self.grid[i][j] is not None:
@@ -323,19 +324,14 @@ class MapEliteRunner:
         indList = ind.getList()
         resultList = []
 
-        #standardizedIndList = self.classifier.standarize(indList)
-        #standardizedOrgList = self.classifier.standarize(self.originalList)
-
         for i in range(len(indList)):
             subtraction = 0
             if self.descriptorList[i] == "Quantitative": 
                 #Do Range Normalized Manhattan Distance. 
-                #print(standardizedOrgList[i])
-                
-                #subtraction = (np.abs((standardizedIndList[i] - standardizedOrgList[i])))
                 if indList[i] == self.originalList[i]:
                     subtraction = 0
                 elif indList[i] == 0 or self.originalList[i] == 0:
+                    ## FIX THIS
                     sparsity += 1
                     subtraction = 1
                 elif indList[i] > self.originalList[i]:
@@ -359,8 +355,6 @@ class MapEliteRunner:
                     subtraction = 1
                     sparsity += 1
 
-            #if subtraction == 0:
-            #    sparsity += 1
             resultList.append(subtraction)
         
         #print(resultList)
@@ -397,8 +391,8 @@ class MapEliteRunner:
         #Determine which section to
         #Returns a tuple of the location of the cell this individual is at.  
         indList = ind.getList() 
-        x = self.Section(xDimension,indList)
-        y = self.Section(yDimension,indList)
+        x = self.Section(self.map.xDim,indList)
+        y = self.Section(self.map.yDim,indList)
         location = (x,y)
         return location
     
@@ -440,8 +434,8 @@ class MapEliteRunner:
 
 #The userinput is the inputted FOR THE LOAN APPLICATION SETTING. 
 
-userInput = [50000,1,1,2,29,2,2,2,2,2,2,24987,24300,26591,25865,27667,28264,0,2700,0,2225,1200,0]
-userInputClone = [50000,1,1,2,29,2,2,2,2,2,2,24987,24300,26591,25865,27667,28264,0,2700,0,2225,1200,0]
+userInput = [30000,2,2,2,22,0,0,0,0,0,0,28387,29612,30326,28004,26446,6411,1686,1400,560,3000,1765,0]
+userInputClone = [30000,2,2,2,22,0,0,0,0,0,0,28387,29612,30326,28004,26446,6411,1686,1400,560,3000,1765,0]
 DescriptorList = ["Quantitative","Qualitative","Qualitative","Qualitative","Quantitative","Qualitative","Qualitative","Qualitative",
                   "Qualitative","Qualitative","Qualitative","Quantitative","Quantitative","Quantitative","Quantitative","Quantitative",
                   "Quantitative","Quantitative","Quantitative","Quantitative","Quantitative","Quantitative","Quantitative"]
@@ -452,12 +446,12 @@ featureSpaceLists= [int,
                     [1,2,3,4],
                     [1,2,3],
                     int,
-                    [-1,1,2,3,4,5,6,7,8,9],
-                    [-1,1,2,3,4,5,6,7,8,9],
-                    [-1,1,2,3,4,5,6,7,8,9],
-                    [-1,1,2,3,4,5,6,7,8,9],
-                    [-1,1,2,3,4,5,6,7,8,9],
-                    [-1,1,2,3,4,5,6,7,8,9],
+                    [-1,0,1,2,3,4,5,6,7,8,9],
+                    [-1,0,1,2,3,4,5,6,7,8,9],
+                    [-1,0,1,2,3,4,5,6,7,8,9],
+                    [-1,0,1,2,3,4,5,6,7,8,9],
+                    [-1,0,1,2,3,4,5,6,7,8,9],
+                    [-1,0,1,2,3,4,5,6,7,8,9],
                     int,
                     int,
                     int,
@@ -475,8 +469,8 @@ actionable = [False,False,False,True, True, False,True,True,True,True,
               True,True,True,True,True,True,True,True,True,True,True,
               True,True]
 
-resolutionx = 21
-resolutiony = 6
+resolutionx = 20
+resolutiony = 5
 
 iteration = 10000
 
@@ -515,11 +509,7 @@ for i in range(iteration):
     #Determine Niche
     child = runner.generateChild()
     #Compete With Niece, replacement on victory. 
-    if child.classifyVal < maxClass:
-        runner.checkElite(child)
-    else:
-        runner.checkElite(child)
-    pass
+    runner.checkElite(child)
 
 
 #Visualize

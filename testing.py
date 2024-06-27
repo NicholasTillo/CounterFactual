@@ -38,12 +38,14 @@ Model.createModel("Data\default_of_credit_card_clients.csv")
  #   print("Predicted: "+ str(i[0]) + ", Actual: " +str(j[0]) )
 # 
 # print(len([50000.36982232727, 5595.900087337819, 5260.311762193608, 1, 46, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 47929, 48905, 49764, 37608.11958899026, 32428, 15313, 5363.133481308545, 5440.513345646703, 5219.36159778346, 5265.217255061664, 5246.38568121507, 5215.391474809184]  ))
-# data, labels = Model.loadData("Data\default_of_credit_card_clients.csv")
-
-# for i,j in zip(data,labels):
-#     prediction = Model.predict(np.array([i]))
-#     print(str(prediction)+","+ str(j))
-#     #print(i)
+data, labels = Model.loadData("Data\default_of_credit_card_clients.csv")
+counter = 0
+for i,j in zip(data,labels):
+     counter += 1
+     
+     prediction = Model.predict(np.array([i]))
+     print(str(counter) +","+str(prediction)+","+ str(j))
+     #print(i)
 
 
 
@@ -82,4 +84,6 @@ for i in DescriptorList:
     else: 
         result.append(1)
     
-print(result)
+# print(result)
+
+# print("Actual One: " + str(Model.predict(np.array([[50000,1,1,2,26,-1,0,0,0,0,0,15448,16392,18096,18425,18619,19060,1500,2000,1500,1200,900,1000]]))))
