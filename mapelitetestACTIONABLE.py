@@ -58,7 +58,7 @@ class Individual:
                         with open("statFile.txt",'r') as statFile:
                             #Find the mean and standard deivation
                             mean, std = statFile.readlines()[i].split(",")
-                            number = int(float(std) * (random.random()*0.1))
+                            number = int(float(std) * (random.random()*0.10))
                             if num < (self.runner.mutationrate/2) and self.param[i] < number:
                                 #Chose wether to increase or decrease the number. 
                                 self.param[i] += number 
