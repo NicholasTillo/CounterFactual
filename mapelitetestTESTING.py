@@ -279,14 +279,29 @@ class MapEliteRunner:
         for i,j,k in zip(ind, userInput, actionable):
             #If it has been changed, and its not actionable.
             #Condition is not actionable. 
-
-            #print("i: " + str(i))
-            #print("j: " + str(j))
-            #print("k: " + str(k))
             if (i != j) and (not k):
                 count += 1
         return count
     
+    def CountTotalChanges(self,ind):
+        count = 0
+        for i,j in zip(ind, userInput):
+            if (i != j):
+                count += 1
+        return count
+    
+    def CountLoanChanges(self,ind):
+        count = 0
+        for i,j in zip(ind[5:], userInput[5:]):
+            if (i != j):
+                count += 1
+        return count
+    def CountNonLoanChanges(self,ind):
+        count = 0
+        for i,j in zip(ind[:5], userInput[:5]):
+            if (i != j):
+                count += 1
+        return count
 
     #Helper function used by the behavour functions
     def Section(self, Condition, indList):
@@ -294,6 +309,12 @@ class MapEliteRunner:
             return self.CountActionChanges(indList)
         elif Condition == "NumInactionableChanges":
             return self.CountInActionChanges(indList)
+        elif Condition == "NumTotalChanges":
+            return self.CountTotalChanges(indList)
+        elif Condition == "NumLoanChanges":
+            return self.CountLoanChanges(indList)
+        elif Condition == "NumNonLoanChanges":
+            return self.CountNonLoanChanges(indList)
         pass
 
 
@@ -373,7 +394,7 @@ class MapEliteRunner:
 
 
         #Plausibility
-        plausibiltiy  = 0
+        #plausibiltiy  = 0
         #Loop through the data, and find the cloest k neighbours. 
 
         #Should describe a realisitc data instance, 
@@ -384,12 +405,9 @@ class MapEliteRunner:
         #sparsity =  - (sparsity/len(indList))
         #sparsity = 0
         #Should vary from x* in only a few features.  
-        #print(standardizedIndList)
-        #print(standardizedOrgList)
-        #print(resultList)
-        #print("vailidty Value: " + str(validityval))
-        #print("Proximity Value: " + str(proximityval))
-        result = (1-validityval) + (proximityval) + plausibiltiy #+ sparsity
+
+
+        result = (1-validityval) + (proximityval) #+ plausibiltiy + sparsity
 
 
         return result
@@ -478,12 +496,12 @@ actionable = [False,False,False,True, True, False,True,True,True,True,
               True,True]
 
 resolutionx = 20
-resolutiony = 5
+resolutiony = 6
 
 iteration = 10000
 
-xDimension = "NumActionableChanges"
-yDimension = "NumInactionableChanges"
+xDimension = "NumLoanChanges"
+yDimension = "NumNonLoanChanges"
 
 #Create empty grid. 
 x = Grid(resolutionx, resolutiony, xDimension, yDimension)
