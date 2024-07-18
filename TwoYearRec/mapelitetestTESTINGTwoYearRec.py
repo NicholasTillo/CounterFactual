@@ -1,6 +1,6 @@
 import numpy as np
 import random
-import deeplearningmodel
+import deeplearningmodeltwoyear
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -62,7 +62,7 @@ class Individual:
                     if value == int:
                         #When reaching an integer, mutate by an amount up to 10% of the standard deviation. 
 
-                        with open("statFile.txt",'r') as statFile:
+                        with open("statFileTwoYear.txt",'r') as statFile:
                             #Find the mean and standard deivation
                             mean, std = statFile.readlines()[i].split(",")
                             number = int(float(std) * (random.random()*0.1))
@@ -467,43 +467,23 @@ class MapEliteRunner:
 
 #The userinput is the inputted FOR THE LOAN APPLICATION SETTING. 
 
-userInput = [30000,2,2,2,22,0,0,0,0,0,0,28387,29612,30326,28004,26446,6411,1686,1400,560,3000,1765,0]
-userInputClone = [30000,2,2,2,22,0,0,0,0,0,0,28387,29612,30326,28004,26446,6411,1686,1400,560,3000,1765,0]
-DescriptorList = ["Quantitative","Qualitative","Qualitative","Qualitative","Quantitative","Qualitative","Qualitative","Qualitative",
-                  "Qualitative","Qualitative","Qualitative","Quantitative","Quantitative","Quantitative","Quantitative","Quantitative",
-                  "Quantitative","Quantitative","Quantitative","Quantitative","Quantitative","Quantitative","Quantitative"]
+userInput = [2.0,2.0,2.0,0.0,1.0]
+userInputClone = [2.0,2.0,2.0,0.0,1.0]
+DescriptorList = ["Qualitative","Qualitative","Qualitative","Quantitative","Quantitative"]
 
 
-featureSpaceLists= [int,
-                    [1,2],
-                    [1,2,3,4],
+featureSpaceLists= [
                     [1,2,3],
+                    [1,2],
+                    [1,2],
                     int,
-                    [-1,0,1,2,3,4,5,6,7,8,9],
-                    [-1,0,1,2,3,4,5,6,7,8,9],
-                    [-1,0,1,2,3,4,5,6,7,8,9],
-                    [-1,0,1,2,3,4,5,6,7,8,9],
-                    [-1,0,1,2,3,4,5,6,7,8,9],
-                    [-1,0,1,2,3,4,5,6,7,8,9],
-                    int,
-                    int,
-                    int,
-                    int,
-                    int,
-                    int,
-                    int,
-                    int,
-                    int,
-                    int,
-                    int,
-                    int]
+                    [1,2]
+                    ]
 #Get whether if the conditions are actionable or not.
-actionable = [False,False,False,True, True, False,True,True,True,True,
-              True,True,True,True,True,True,True,True,True,True,True,
-              True,True]
+actionable = [False,False,False,True, True]
 
-resolutionx = 20
-resolutiony = 9
+resolutionx = 5
+resolutiony = 5
 
 iteration = 10000
 
@@ -515,8 +495,8 @@ x = Grid(resolutionx, resolutiony, xDimension, yDimension)
 x.initGrid()
 
 #Create some test individuals. 
-Model = deeplearningmodel.modelReader()
-Model.createModel("Data\default_of_credit_card_clients.csv")
+Model = deeplearningmodeltwoyear.modelReader()
+Model.createModel("TwoYearRec\compass_data_mace.csv")
 mutationRate = 0.05
 
 runner = MapEliteRunner(mutationRate,  x,  Model,  userInput,  DescriptorList,  featureSpaceLists)

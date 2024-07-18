@@ -7,14 +7,13 @@ import csv
 
 class modelReader:
     def __init__(self) -> None:
-        self.model=None
-
+        self.model = None
         pass
 
         
     def checkSave(self):
         try:
-            open("my_medical_model.keras","r")
+            open("my_model_two_year.keras","r")
             return True
         except:
             return False
@@ -23,7 +22,7 @@ class modelReader:
     def createSave(self,model):
         try:
             print("ATTEMPTINGSAVE")
-            model.save('my_medical_model.keras')
+            model.save('my_model_two_year.keras')
             print("Save Good")
 
             return True
@@ -34,7 +33,7 @@ class modelReader:
 
     def loadSave(self):
         print("Trying to Load Model")
-        self.model = models.load_model('my_medical_model.keras')
+        self.model = models.load_model('my_model_two_year.keras')
         print("Loaded Model")
         return True
     
@@ -45,75 +44,56 @@ class modelReader:
         if self.checkSave():
             self.loadSave()
             return "Recived from File"
-        
-        training_data = []
-        training_labels = [] 
+        data,labels = self.loadData(datalink)  # 30000,23 | 30000,1
 
-        testing_images = []
-        testing_labels = []
-        with np.load('Data\dermamnist_64.npz') as data:
-            training_data = data["train_images"]
-            training_labels = data["train_labels"]
-            testing_data = data["test_images"]
-            testing_labels = data["test_labels"]
-
-
-        #data,labels = self.loadData(datalink)  # 30000,23 | 30000,1
-
-        #Standarize data. 
-        
-        # data = np.transpose(data)
-        # with open("statFile.txt",'w') as statFile:
-        #     for i in data:
-        #         mean = np.mean(i)
-        #         std = np.std(i)
-        #         for num in range(len(i)):
-        #             i[num] = (i[num] - mean) / std
+        # Standarize data. 
+        data = np.transpose(data)
+        with open("statFileTwoYear.txt",'w') as statFile:
+            for i in data:
+                mean = np.mean(i)
+                std = np.std(i)
+                for num in range(len(i)):
+                    i[num] = (i[num] - mean) / std
                     
-        #         statFile.write(str(mean) +","+str(std)+ "\n")
+                statFile.write(str(mean) +","+str(std)+ "\n")
 
-        # data = np.transpose(data)
+        data = np.transpose(data)
         
 
         #Split into eval and training data
+        split = -500
+        dataEVAL = data[split:]
+        labelEVAL = labels[split:]
+
+        data = data[:split]
+        labels = labels[:split]
 
         # Creating a Sequential model
         model = Sequential()
 
         # Adding layers to the model
-        model.add(tf.keras.layers.Input(shape=(64,64,3,)))
-        model.add(tf.keras.layers.Activation("relu"))
-        model.add(tf.keras.layers.SeparableConv2D(64, 3, padding="same"))
-        model.add(tf.keras. layers.BatchNormalization())
+        model.add(tf.keras.layers.Input(shape=(5,)))
+        model.add(tf.keras.layers.Dense(128, activation='relu'))  
         model.add(tf.keras.layers.Dropout(0.2))
-    
-    
-        model.add(tf.keras.layers.Activation("relu"))
-        model.add(tf.keras.layers.SeparableConv2D(128, 3, padding="same"))
-        model.add(tf.keras. layers.BatchNormalization())
-
-        model.add(tf.keras.layers.MaxPooling2D((4,4), strides=4, padding="valid")) 
-
-        model.add(tf.keras.layers.MaxPooling2D((4,4), strides=4, padding="valid")) 
-
-        model.add(tf.keras.layers.GlobalAveragePooling2D())
-        model.add(tf.keras.layers.Dense(1, activation=None))
+        model.add(tf.keras.layers.Dense(128, activation='relu'))
+        model.add(tf.keras.layers.Dropout(0.2))
+        model.add(tf.keras.layers.Dense(128, activation='relu'))  
+        model.add(tf.keras.layers.Dense(1, activation='sigmoid'))  # Output layer with 1 neuron and sigmoid activation for binary classification
 
         # Compiling the model
         model.compile(optimizer='adam', loss= tf.keras.losses.BinaryCrossentropy(), metrics=['accuracy'])
 
         # Training the model
-        model.fit(training_data, training_labels, epochs=25, batch_size=8, validation_split=0.1)
+        model.fit(data, labels, epochs=50, batch_size=1, validation_split=0.1)
         self.model = model
 
-
         self.createSave(model)
-        self.evaluate(testing_data,testing_labels,training_data,training_labels)
+        self.evaluate(dataEVAL,labelEVAL,data,labels)
 
         return "Recived from File"
 
     def standarize(self, data):
-        with open("statMedicalFile.txt",'r') as statFile:
+        with open("statFileTwoYear.txt",'r') as statFile:
             mean, std = statFile.readline().split(",")
             
             mean = float(mean)
@@ -163,7 +143,7 @@ class modelReader:
         return prediction
 
     def loadData(self,datalink):
-        datalink = "Data\dermamnist_64.npz"
+        datalink = "TwoYearRec\compass_data_mace.csv"
         with open(datalink) as csvfile:
             csvreader = csv.reader(csvfile)
             fields = next(csvreader)
@@ -172,19 +152,17 @@ class modelReader:
             rows = []
             labels = []
             for row in csvreader:
-                rows.append(row[1:-1])
-                labels.append([row[-1]])
+                rows.append(row[2:])
+                labels.append([row[1]])
 
         rowNP = np.array(rows, dtype=float)
         labels = np.array(labels,  dtype=float)
         return rowNP, labels
 
+reader = modelReader()
+reader.createModel("TwoYearRec\compass_data_mace.csv")
 
 #MODEL IS NOT COMPLETE. 
-
-reader = modelReader()
-reader.createModel("Data\dermamnist_64.npz")
-
 
 
 
