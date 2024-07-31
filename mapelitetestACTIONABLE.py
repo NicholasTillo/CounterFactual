@@ -175,7 +175,7 @@ class Grid:
 
 
 class MapEliteRunner:
-    def __init__(self,mutationRate,map, classifier,originalList, descriptorList, featureSpaceList) -> None:
+    def __init__(self,mutationRate,map, data,originalList, descriptorList, featureSpaceList) -> None:
         #Self Explanitory
         self.mutationrate = mutationRate
 
@@ -185,11 +185,14 @@ class MapEliteRunner:
         #Current number of elites 
         self.numElites = 0
         #Classifier Object
-        self.classifier = classifier
+        Model = deeplearningmodel.modelReader()
+        Model.createModel(data)
+        self.classifier = Model
+        self.datalink = data
         #Original List, that we are generating the counterfactuals for
         self.originalList = originalList
         #Original classification for the original list, to see if we are wasting our time. 
-        self.originalClassifier = classifier.predict(np.array([originalList]))
+        self.originalClassifier = self.classifier.predict(np.array([originalList]))
         #A list that describes if each feature is qualitative or quantitivatie. 
         self.descriptorList = descriptorList
         #2D array that describes the feature spaces for each feature. 
@@ -400,7 +403,14 @@ class MapEliteRunner:
 
     def showPlot(self):
         plot = sns.heatmap(self.map.getFitnessGrid(), annot=True, cmap='viridis')
-        plt.title('Heatmap of 2D Numpy Array')
+        x,y = self.map.get_dimensions()
+
+        plot.set(
+            title="Heatmap",
+            xlabel=x,
+            ylabel=y,
+        )
+        
         plt.show()
         plot = plot.get_figure()
         plot.savefig("figure.png")

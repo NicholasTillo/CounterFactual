@@ -1,0 +1,27 @@
+AgeGroup,Race,Sex,PriorsCount,ChargeDegree,TwoYearRecid
+Original Input: [2.0, 2.0, 2.0, 0.0, 1.0]Original Label: [[0.259235]]
+Counterfactual at location: 0,0: [2, 2.0, 1, -7.0, 1.0] Fitness: [[1.599993]] Classifier Val: [[7.0684096e-06]]
+Counterfactual at location: 0,1: [2, 2.0, 2, -7.0, 1.0] Fitness: [[1.799994]] Classifier Val: [[5.9475174e-06]]
+Counterfactual at location: 0,2: None
+Counterfactual at location: 0,3: None
+Counterfactual at location: 0,4: None
+Counterfactual at location: 1,0: None
+Counterfactual at location: 1,1: None
+Counterfactual at location: 1,2: None
+Counterfactual at location: 1,3: None
+Counterfactual at location: 1,4: None
+Counterfactual at location: 2,0: None
+Counterfactual at location: 2,1: None
+Counterfactual at location: 2,2: None
+Counterfactual at location: 2,3: None
+Counterfactual at location: 2,4: None
+Counterfactual at location: 3,0: None
+Counterfactual at location: 3,1: None
+Counterfactual at location: 3,2: None
+Counterfactual at location: 3,3: None
+Counterfactual at location: 3,4: None
+Counterfactual at location: 4,0: None
+Counterfactual at location: 4,1: None
+Counterfactual at location: 4,2: None
+Counterfactual at location: 4,3: None
+Counterfactual at location: 4,4: None
