@@ -70,11 +70,18 @@ class Individual:
                             if number == 0:
                                 if random.random() < 0.5:
                                     number = 1
-                            if num < (self.runner.mutationrate/2) and self.param[i] > number:
+                            
+
+                            if num < (self.runner.mutationrate/2) or self.param[i] < number:
                                 #Chose wether to increase or decrease the number. 
                                 self.param[i] += number 
                             else:
                                 self.param[i] -= number
+
+                            if i == 3:
+                                print(number)
+                                print(self.param[i])
+                        
         return 
     
     def determineBehaviour(self):
@@ -171,16 +178,34 @@ class Grid:
         #Returns the whole grid object. 
         return self.grid
     
-    def getFitnessGrid(self):
+    def getFitnessGrid(self, relative = False):
         #Returns a 2D grid of the corresponing fitness's of the individuals that inhabit that elite. 
         #Used in the display
-        clone =  np.empty(shape=(self.resolutiony,self.resolutionx), dtype=float)
-        clone.fill(0)
-        for i in range(self.grid.shape[0]):
-            for j in range(self.grid.shape[1]):
-               if self.grid[i][j] is not None:
-                    clone[i][j] = self.grid[i][j].getFitness()
+        if relative == True:
+            lowest = 100
+            for i in range(self.grid.shape[0]):
+                for j in range(self.grid.shape[1]):
+                    if self.grid[i][j] is not None:
+                            temp = self.grid[i][j].getFitness()
+                            if temp < lowest:
+                                lowest = temp
 
+                        
+            clone =  np.empty(shape=(self.resolutiony,self.resolutionx), dtype=float)
+            clone.fill(0)
+            for i in range(self.grid.shape[0]):
+                for j in range(self.grid.shape[1]):
+                    if self.grid[i][j] is not None:
+                            clone[i][j] = (self.grid[i][j].getFitness() - lowest) * 100
+
+        else:
+            clone =  np.empty(shape=(self.resolutiony,self.resolutionx), dtype=float)
+            clone.fill(0)
+            for i in range(self.grid.shape[0]):
+                for j in range(self.grid.shape[1]):
+                    if self.grid[i][j] is not None:
+                            clone[i][j] = (self.grid[i][j].getFitness())
+        
         return clone
     
     def updateNumElite(self):
@@ -296,7 +321,7 @@ class MapEliteRunner:
     def CountActionChanges(self,ind):
         count = 0
         for i,j,k in zip(ind, self.originalList, self.actionableList):
-            if (i != j) and (k):
+            if (i != j) and (k == 1):
                 count += 1
         return count
 
@@ -306,7 +331,7 @@ class MapEliteRunner:
         for i,j,k in zip(ind, self.originalList, self.actionableList):
             #If it has been changed, and its not actionable.
             #Condition is not actionable. 
-            if (i != j) and (not k):
+            if (i != j) and (not k == 1):
                 count += 1
         return count
     
@@ -352,7 +377,7 @@ class MapEliteRunner:
         #For example, with a tolerance_number of 2, the coutnerfactuals would generate from 0 - 2* the original value. 
         tolerance_number = 2
 
-        if self.descriptorList[num] == "Quantitative": 
+        if self.descriptorList[num] == 0: 
             #Initilaize Empty Lists. 
             featurelist = []
 
@@ -371,7 +396,7 @@ class MapEliteRunner:
 
             for i in range(usedNum):
                 next = current + boxsize
-                featurelist.append(str(current) + " - " + str(next))
+                featurelist.append(str(int(current)) + " - " + str(int(next)))
                 if ind[num] <= next and value == None:
                     value = i
                 current = next
@@ -384,7 +409,7 @@ class MapEliteRunner:
         
             return value
         
-        elif self.descriptorList[num] == "Qualitative":
+        elif self.descriptorList[num] == 1:
 
             #Update Labels
             if xory == "x":
@@ -482,7 +507,7 @@ class MapEliteRunner:
 
         for i in range(len(indList)):
             subtraction = 0
-            if self.descriptorList[i] == "Quantitative": 
+            if self.descriptorList[i] == 0: 
                 #Do Range Normalized Manhattan Distance. 
                 if indList[i] == self.originalList[i]:
                     subtraction = 0
@@ -499,7 +524,7 @@ class MapEliteRunner:
                 
 
                 #print(np.abs((standardizedIndList[i] - standardizedOrgList[i])) / standardizedOrgList[i])
-            elif self.descriptorList[i] == "Qualitative":
+            elif self.descriptorList[i] == 1:
                 # Do Dice Distnace, 
                 # if standardizedIndList[i] == standardizedOrgList[i]:
                 if indList[i] ==  self.originalList[i]:
@@ -542,7 +567,8 @@ class MapEliteRunner:
     
 
     def showPlot(self, where=None ,showGrid=True):
-        plot = sns.heatmap(self.map.getFitnessGrid(), annot=True, fmt=".3f", cmap='viridis',xticklabels = self.xlabel, yticklabels = self.ylabel)
+        plot = sns.heatmap(self.map.getFitnessGrid(relative=False), annot=True, fmt=".3f", cmap='viridis',xticklabels = self.xlabel, yticklabels = self.ylabel)
+        plot.figure.tight_layout()
         x,y = self.map.get_dimensions()
         plot.set(
             title="Heatmap",
@@ -631,9 +657,7 @@ def main():
     #The us`erinput is the inputted FOR THE LOAN APPLICATION SETTING. 
 
     userInput = [30000,2,2,2,22,0,0,0,0,0,0,28387,29612,30326,28004,26446,6411,1686,1400,560,3000,1765,0]
-    DescriptorList = ["Quantitative","Qualitative","Qualitative","Qualitative","Quantitative","Qualitative","Qualitative","Qualitative",
-                    "Qualitative","Qualitative","Qualitative","Quantitative","Quantitative","Quantitative","Quantitative","Quantitative",
-                    "Quantitative","Quantitative","Quantitative","Quantitative","Quantitative","Quantitative","Quantitative"]
+    DescriptorList = [0,1,1,1,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0]
 
     featureSpaceLists= [int,
                         [1,2],
@@ -659,14 +683,12 @@ def main():
                         int,
                         int]
     #Get whether if the conditions are actionable or not.
-    actionable = [False,False,False,True, True, False,True,True,True,True,
-                True,True,True,True,True,True,True,True,True,True,True,
-                True,True]
+    actionable = [0,0,0,0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
     resolutionx = 4
     resolutiony = 20
 
-    iteration = 100
+    iteration = 5000
 
     #CAn have them just be a number, and itll show ones with 
     xDimension = 2
@@ -677,11 +699,12 @@ def main():
 
     #Create some test individuals. 
 
-    mutationRate = 0.05
+    mutationRate = 0.1
     Model = deeplearningmodelGoodCopy.modelReader(23)
     Model.createModel("Data\default_of_credit_card_clients.csv")
     runner = MapEliteRunner(mutationRate,  gridstats,  "Data\default_of_credit_card_clients.csv", Model, userInput,  DescriptorList,  featureSpaceLists,actionable)
-    runner.runAllCombinations(iteration)
+    runner.run(iteration,"WithOutRelative")
+    #runner.runAllCombinations(iteration)
     # runner.runAllCombinations()
 
 
@@ -692,26 +715,21 @@ def main():
 
 def main2():
     userInput = [2.0,2.0,2.0,0.0,1.0]
-    DescriptorList = ["Qualitative","Qualitative","Qualitative","Quantitative","Quantitative"]
+    DescriptorList = [1,1,1,0,1]
 
 
-    featureSpaceLists= [
-                        [1,2,3],
-                        [1,2],
-                        [1,2],
-                        int,
-                        [1,2]
-                        ]
+    featureSpaceLists= [[1,2,3],[1,2],[1,2],int,[1,2]]
     #Get whether if the conditions are actionable or not.
-    actionable = [False,False,False,True, True]
+    actionable = [0,0,0,1,1]
 
     resolutionx = 5
     resolutiony = 5
 
-    iteration = 500
+    iteration = 1000
 
-    xDimension = "NumActionableChanges"
-    yDimension = "NumInactionableChanges"
+
+    xDimension = 3
+    yDimension = 0
 
     #Create empty grid. 
 
@@ -721,7 +739,8 @@ def main2():
     #Create some test individuals. 
     Model = deeplearningmodelGoodCopy.modelReader(5)
     Model.createModel("TwoYearRec\compass_data_mace.csv")
-    mutationRate = 0.05
+    mutationRate = 0.5
 
     runner = MapEliteRunner(mutationRate,  gridstats,  "TwoYearRec\compass_data_mace.csv", Model, userInput,  DescriptorList,  featureSpaceLists, actionable)
-    runner.runAllCombinations(iteration)
+    # runner.runAllCombinations(iteration)
+    runner.run(iteration,"Name")

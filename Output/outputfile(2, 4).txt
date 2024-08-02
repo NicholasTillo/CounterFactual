@@ -10,8 +10,8 @@ Counterfactual at location: 1,1: None
 Counterfactual at location: 1,2: None
 Counterfactual at location: 1,3: None
 Counterfactual at location: 1,4: None
-Counterfactual at location: 2,0: [2, 2, 1, -11.0, 1.0] Fitness: [[1.6]] Classifier Val: [[1.3110245e-08]]
-Counterfactual at location: 2,1: [2, 2, 2, -10.0, 1.0] Fitness: [[1.8]] Classifier Val: [[5.2750714e-08]]
+Counterfactual at location: 2,0: [2, 2.0, 1, -11.0, 1.0] Fitness: [[1.6]] Classifier Val: [[1.3110245e-08]]
+Counterfactual at location: 2,1: [2, 2.0, 2, -11.0, 1.0] Fitness: [[1.8]] Classifier Val: [[1.0919227e-08]]
 Counterfactual at location: 2,2: None
 Counterfactual at location: 2,3: None
 Counterfactual at location: 2,4: None
@@ -20,8 +20,8 @@ Counterfactual at location: 3,1: None
 Counterfactual at location: 3,2: None
 Counterfactual at location: 3,3: None
 Counterfactual at location: 3,4: None
-Counterfactual at location: 4,0: [2, 2, 1, -10.0, 2] Fitness: [[1.5]] Classifier Val: [[6.9560315e-08]]
-Counterfactual at location: 4,1: [2, 2, 2, -10.0, 2] Fitness: [[1.6999999]] Classifier Val: [[5.7935107e-08]]
+Counterfactual at location: 4,0: [2, 2.0, 1, -10.0, 2] Fitness: [[1.5]] Classifier Val: [[6.9560315e-08]]
+Counterfactual at location: 4,1: [2, 2.0, 2, -11.0, 2] Fitness: [[1.7]] Classifier Val: [[1.19720145e-08]]
 Counterfactual at location: 4,2: None
 Counterfactual at location: 4,3: None
 Counterfactual at location: 4,4: None

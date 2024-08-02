@@ -1,27 +1,82 @@
-AgeGroup,Race,Sex,PriorsCount,ChargeDegree,TwoYearRecid
-Original Input: [2.0, 2.0, 2.0, 0.0, 1.0]Original Label: [[0.259235]]
-Counterfactual at location: 0,0: [1, 2.0, 1, -4.0, 1.0] Fitness: [[1.3988456]] Classifier Val: [[0.00115446]]
-Counterfactual at location: 0,1: [2, 2.0, 1, -4.0, 1.0] Fitness: [[1.5992734]] Classifier Val: [[0.00072667]]
-Counterfactual at location: 0,2: [3, 2.0, 1, 0.0, 1.0] Fitness: [[1.4089432]] Classifier Val: [[0.19105689]]
+LIMIT_BAL,SEX,EDUCATION,MARRIAGE,AGE,PAY_0,PAY_2,PAY_3,PAY_4,PAY_5,PAY_6,BILL_AMT1,BILL_AMT2,BILL_AMT3,BILL_AMT4,BILL_AMT5,BILL_AMT6,PAY_AMT1,PAY_AMT2,PAY_AMT3,PAY_AMT4,PAY_AMT5,PAY_AMT6,default payment next month
+Original Input: [30000, 2, 2, 2, 22, 0, 0, 0, 0, 0, 0, 28387, 29612, 30326, 28004, 26446, 6411, 1686, 1400, 560, 3000, 1765, 0]Original Label: [[0.]]
+Counterfactual at location: 0,0: None
+Counterfactual at location: 0,1: [28709, 2, 1, 2, 22, 0, 0, 0, 0, 0, 0, 30214, 30854, 30326, 26873, 26532, 6000, 1795, 1400, 560, 3065, 1765, 2454] Fitness: [[1.8985467]] Classifier Val: [[0.]]
+Counterfactual at location: 0,2: [33061, 2, 1, 2, 22, 0, 0, 0, 0, 0, 0, 30214, 30854, 30326, 27645, 26532, 6000, 1795, 1400, 560, 3065, 1765, 2454] Fitness: [[1.8975909]] Classifier Val: [[0.]]
 Counterfactual at location: 0,3: None
-Counterfactual at location: 0,4: None
-Counterfactual at location: 1,0: [1, 2.0, 2, -4.0, 1.0] Fitness: [[1.5989692]] Classifier Val: [[0.0010308]]
-Counterfactual at location: 1,1: [2, 2.0, 2, -3.0, 1.0] Fitness: [[1.7966241]] Classifier Val: [[0.00337595]]
-Counterfactual at location: 1,2: [3, 2.0, 2, 0.0, 1.0] Fitness: [[1.6294991]] Classifier Val: [[0.17050092]]
+Counterfactual at location: 1,0: None
+Counterfactual at location: 1,1: [26830, 2, 1, 1, 22, -1, 0, 0, 0, 1, -1, 35160, 30854, 30326, 31703, 28264, 1349, 1686, 1400, 560, 1917, 1765, 39] Fitness: [[2.]] Classifier Val: [[0.]]
+Counterfactual at location: 1,2: [33061, 2, 2, 2, 22, 0, 0, 0, 0, 0, 0, 30214, 30854, 30326, 26873, 29629, 6000, 1795, 1400, 560, 3065, 1765, 2454] Fitness: [[1.9353406]] Classifier Val: [[0.]]
 Counterfactual at location: 1,3: None
-Counterfactual at location: 1,4: None
 Counterfactual at location: 2,0: None
 Counterfactual at location: 2,1: None
 Counterfactual at location: 2,2: None
 Counterfactual at location: 2,3: None
-Counterfactual at location: 2,4: None
 Counterfactual at location: 3,0: None
 Counterfactual at location: 3,1: None
 Counterfactual at location: 3,2: None
 Counterfactual at location: 3,3: None
-Counterfactual at location: 3,4: None
 Counterfactual at location: 4,0: None
 Counterfactual at location: 4,1: None
 Counterfactual at location: 4,2: None
 Counterfactual at location: 4,3: None
-Counterfactual at location: 4,4: None
+Counterfactual at location: 5,0: None
+Counterfactual at location: 5,1: None
+Counterfactual at location: 5,2: None
+Counterfactual at location: 5,3: None
+Counterfactual at location: 6,0: None
+Counterfactual at location: 6,1: None
+Counterfactual at location: 6,2: None
+Counterfactual at location: 6,3: None
+Counterfactual at location: 7,0: None
+Counterfactual at location: 7,1: None
+Counterfactual at location: 7,2: None
+Counterfactual at location: 7,3: None
+Counterfactual at location: 8,0: None
+Counterfactual at location: 8,1: None
+Counterfactual at location: 8,2: None
+Counterfactual at location: 8,3: None
+Counterfactual at location: 9,0: None
+Counterfactual at location: 9,1: None
+Counterfactual at location: 9,2: None
+Counterfactual at location: 9,3: None
+Counterfactual at location: 10,0: None
+Counterfactual at location: 10,1: None
+Counterfactual at location: 10,2: None
+Counterfactual at location: 10,3: None
+Counterfactual at location: 11,0: None
+Counterfactual at location: 11,1: None
+Counterfactual at location: 11,2: None
+Counterfactual at location: 11,3: None
+Counterfactual at location: 12,0: None
+Counterfactual at location: 12,1: None
+Counterfactual at location: 12,2: None
+Counterfactual at location: 12,3: None
+Counterfactual at location: 13,0: None
+Counterfactual at location: 13,1: None
+Counterfactual at location: 13,2: None
+Counterfactual at location: 13,3: None
+Counterfactual at location: 14,0: None
+Counterfactual at location: 14,1: None
+Counterfactual at location: 14,2: None
+Counterfactual at location: 14,3: None
+Counterfactual at location: 15,0: None
+Counterfactual at location: 15,1: None
+Counterfactual at location: 15,2: None
+Counterfactual at location: 15,3: None
+Counterfactual at location: 16,0: None
+Counterfactual at location: 16,1: None
+Counterfactual at location: 16,2: None
+Counterfactual at location: 16,3: None
+Counterfactual at location: 17,0: None
+Counterfactual at location: 17,1: None
+Counterfactual at location: 17,2: None
+Counterfactual at location: 17,3: None
+Counterfactual at location: 18,0: None
+Counterfactual at location: 18,1: None
+Counterfactual at location: 18,2: None
+Counterfactual at location: 18,3: None
+Counterfactual at location: 19,0: None
+Counterfactual at location: 19,1: None
+Counterfactual at location: 19,2: None
+Counterfactual at location: 19,3: None

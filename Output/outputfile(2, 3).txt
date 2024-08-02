@@ -1,7 +1,7 @@
 AgeGroup,Race,Sex,PriorsCount,ChargeDegree,TwoYearRecid
 Original Input: [2.0, 2.0, 2.0, 0.0, 1.0]Original Label: [[0.259235]]
-Counterfactual at location: 0,0: [2, 2.0, 1, -7.0, 1.0] Fitness: [[1.599993]] Classifier Val: [[7.0684096e-06]]
-Counterfactual at location: 0,1: [2, 2.0, 2, -7.0, 1.0] Fitness: [[1.799994]] Classifier Val: [[5.9475174e-06]]
+Counterfactual at location: 0,0: [2.0, 2, 1, 0.0, 1.0] Fitness: [[1.5183086]] Classifier Val: [[0.28169146]]
+Counterfactual at location: 0,1: [2.0, 1, 1, 0.0, 1.0] Fitness: [[1.740765]] Classifier Val: [[0.259235]]
 Counterfactual at location: 0,2: None
 Counterfactual at location: 0,3: None
 Counterfactual at location: 0,4: None

@@ -5,7 +5,7 @@ import PyQt5.QtCore as core
 import deeplearningmodelGoodCopy
 import mapelitetestGoodCopy
 import sys
-
+from ast import literal_eval
 
 
 class MainWindow(wid.QMainWindow):
@@ -120,7 +120,11 @@ class MainWindow(wid.QMainWindow):
 
         userInput = [float(i) for i in self.entryeight.text().replace("[","").replace("]","").split(",")]
         DescriptorList = [int(i) for i in self.entryfive.text().replace("[","").replace("]","").split(",")]
-        featureSpaceLists = self.entryfour.text().replace("[","").replace("]","").split(",")
+        featureSpaceLists = literal_eval(self.entryfour.text())
+
+        print(featureSpaceLists)
+        print(type(featureSpaceLists))
+
         #Get whether if the conditions are actionable or not.
         actionable = [int(i) for i in self.entrysix.text().replace("[","").replace("]","").split(",")]
         iteration = 100
@@ -148,13 +152,17 @@ class MainWindow(wid.QMainWindow):
         runner = mapelitetestGoodCopy.MapEliteRunner(mutationRate,  gridstats,  "Data\default_of_credit_card_clients.csv", Model, userInput,  DescriptorList,  featureSpaceLists,actionable)
         runner.run(iteration)
         # runner.runAllCombinations()
+        self.make_shortcut_file(userInput,DescriptorList, featureSpaceLists,actionable,gridstats,iteration)
+        
 
 
 
+    def make_shortcut_file(self, uI, dL, fSL, actionable, gS,iteration):
+        with open("shortcut.txt","w") as shortcutFile:
+            shortcutFile.write(uI+"\n"+dL+"\n"+fSL+"\n"+actionable+"\n"+gS+"\n"+iteration)
+        
 
 
-    def make_shortcut_file(self):
-        pass
 
         
 
@@ -165,7 +173,7 @@ class ChosenLoadFile(wid.QMainWindow):
         self.setWindowTitle("My App")
         self.setFixedSize(core.QSize(400, 300))
 
-        label1 = wid.QLabel("Get the Directory Of The Premade File")
+        label1 = wid.QLabel("Get the Directory Of The Premade File. The data is stored as: UserInput, DescriptorList, FeatureSpaceList,actionableList,GridStatus, iterations, all seperated by new lines. ")
         label1.setAlignment(core.Qt.AlignHCenter)
 
         entry1 = wid.QLineEdit("X")
@@ -188,6 +196,12 @@ class ChosenLoadFile(wid.QMainWindow):
     def button_done(self,Param):
         print("do Calculations")
         pass
+
+    def openShortcut(self,path):
+        with open(path,"r") as shorcutFile:
+            pass
+        pass
+
 
 
     
