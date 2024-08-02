@@ -2,7 +2,9 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import deeplearningmodel
+from sklearn.datasets import make_classification
 
+import csv
 # Create a sample 2D numpy array
 # data = np.random.rand(10, 10)
 
@@ -127,13 +129,23 @@ import deeplearningmodel
 # arr2 = np.array(arr)
 # print(arr2.shape)
 
-number = 3
-result = [[0]*number]
-print(result)
+# number = 3
+# result = [[0]*number]
+# print(result)
 
 
-import os
-cwd = os.getcwd()
-path = os.path.join(cwd, "Output")           
-os.makedirs(path)
-print(cwd)
+# import os
+# cwd = os.getcwd()
+# path = os.path.join(cwd, "Output")           
+# os.makedirs(path)
+# print(cwd)
+with open("make_classification_file.csv","w") as csvfile:
+    spamwriter = csv.writer(csvfile, delimiter=',')
+    X,y = make_classification(n_samples=1000)
+    for i in zip(X,y):
+        i1 = str(i[0]).replace("[",'').replace("]",'')
+        i2 = str(i[1])
+        iret = i1 + "," + i2
+
+        spamwriter.writerow(iret)
+

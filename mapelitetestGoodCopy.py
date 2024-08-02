@@ -703,8 +703,8 @@ def main():
     Model = deeplearningmodelGoodCopy.modelReader(23)
     Model.createModel("Data\default_of_credit_card_clients.csv")
     runner = MapEliteRunner(mutationRate,  gridstats,  "Data\default_of_credit_card_clients.csv", Model, userInput,  DescriptorList,  featureSpaceLists,actionable)
-    runner.run(iteration,"WithOutRelative")
-    #runner.runAllCombinations(iteration)
+    #runner.run(iteration,"WithOutRelative")
+    runner.runAllCombinations(iteration)
     # runner.runAllCombinations()
 
 
@@ -744,3 +744,5 @@ def main2():
     runner = MapEliteRunner(mutationRate,  gridstats,  "TwoYearRec\compass_data_mace.csv", Model, userInput,  DescriptorList,  featureSpaceLists, actionable)
     # runner.runAllCombinations(iteration)
     runner.run(iteration,"Name")
+
+main()

@@ -1,49 +1,49 @@
 LIMIT_BAL,SEX,EDUCATION,MARRIAGE,AGE,PAY_0,PAY_2,PAY_3,PAY_4,PAY_5,PAY_6,BILL_AMT1,BILL_AMT2,BILL_AMT3,BILL_AMT4,BILL_AMT5,BILL_AMT6,PAY_AMT1,PAY_AMT2,PAY_AMT3,PAY_AMT4,PAY_AMT5,PAY_AMT6,default payment next month
 Original Input: [30000, 2, 2, 2, 22, 0, 0, 0, 0, 0, 0, 28387, 29612, 30326, 28004, 26446, 6411, 1686, 1400, 560, 3000, 1765, 0]Original Label: [[0.]]
 Counterfactual at location: 0,0: None
-Counterfactual at location: 0,1: [28900, 2, 2, 2, 22, 0, 0, 2, 0, -1, 0, 28341, 29612, 30958, 28004, 26669, 6515, 1654, 1586, 712, 3125, 1777, 734] Fitness: [[1.8487165]] Classifier Val: [[0.]]
-Counterfactual at location: 0,2: [30693, 2, 2, 2, 22, 0, 0, 2, 0, -1, 0, 28341, 29612, 30958, 28004, 26669, 6515, 1654, 1586, 712, 3125, 1777, 1725] Fitness: [[1.8493291]] Classifier Val: [[0.]]
-Counterfactual at location: 0,3: None
+Counterfactual at location: 0,1: [30000, 2, 2, 2, 22, 0, 0, 0, 0, -1, 0, 28387, 29904, 29786, 25231, 26546, 6411, 1703, 1362, 579, 3075, 1765, 0] Fitness: [[1.9467525]] Classifier Val: [[0.]]
+Counterfactual at location: 0,2: [34420, 2, 2, 2, 22, 0, 0, 0, 0, -1, 0, 26849, 29904, 29786, 25231, 26546, 6411, 1703, 1362, 579, 3075, 1765, 0] Fitness: [[1.9388137]] Classifier Val: [[0.]]
+Counterfactual at location: 0,3: [45834, 2, 2, 2, 22, 0, 0, 0, 0, -1, 0, 28387, 29904, 29786, 27308, 26546, 6411, 1703, 1362, 579, 2942, 1765, 0] Fitness: [[1.935177]] Classifier Val: [[0.]]
 Counterfactual at location: 1,0: None
-Counterfactual at location: 1,1: [18443, 1, 2, 2, 23, 1, 0, 2, 0, -1, -1, 29519, 29612, 30326, 28004, 30012, 6515, 2577, 3075, 3357, 3000, 361, 734] Fitness: [[2.]] Classifier Val: [[0.]]
-Counterfactual at location: 1,2: [30693, 2, 2, 2, 22, 0, 0, 2, 0, 0, 0, 28341, 29612, 30958, 28848, 26669, 6515, 1654, 1586, 712, 3125, 1777, 295] Fitness: [[1.8915353]] Classifier Val: [[0.]]
-Counterfactual at location: 1,3: None
+Counterfactual at location: 1,1: [30000, 2, 3, 2, 22, 0, 0, 0, 1, 1, 1, 28387, 26513, 32031, 25231, 30330, 6411, 569, 1400, 1325, 3000, 1765, 0] Fitness: [[2.]] Classifier Val: [[0.]]
+Counterfactual at location: 1,2: [33495, 2, 2, 2, 22, 0, 0, 0, 0, 0, 0, 28387, 26513, 29786, 25231, 25649, 6411, 1703, 1362, 749, 2942, 1765, 0] Fitness: [[1.9710975]] Classifier Val: [[0.]]
+Counterfactual at location: 1,3: [46389, 2, 2, 2, 21, 0, 0, 0, 0, 0, 0, 28387, 29904, 28732, 27308, 24400, 6411, 1703, 1679, 579, 3075, 1765, 0] Fitness: [[1.9653629]] Classifier Val: [[0.]]
 Counterfactual at location: 2,0: None
-Counterfactual at location: 2,1: [28900, 2, 2, 2, 22, 0, 0, 2, 0, 1, 0, 28341, 29612, 30958, 28004, 26669, 6515, 1654, 1586, 712, 3125, 1777, 406] Fitness: [[1.8487165]] Classifier Val: [[0.]]
-Counterfactual at location: 2,2: [30693, 2, 2, 2, 22, 0, 0, 2, 0, 1, 0, 28728, 29612, 30958, 28004, 26669, 6515, 1654, 1586, 712, 3125, 1777, 734] Fitness: [[1.8488834]] Classifier Val: [[0.]]
-Counterfactual at location: 2,3: None
+Counterfactual at location: 2,1: [30000, 2, 2, 2, 21, 0, 0, 0, 0, 1, 0, 28387, 30333, 29786, 28965, 26546, 6411, 1703, 1362, 579, 3000, 1765, 0] Fitness: [[1.9480906]] Classifier Val: [[0.]]
+Counterfactual at location: 2,2: [30865, 2, 2, 2, 22, 0, 0, 0, 0, 1, 0, 28387, 29904, 29786, 27308, 26475, 6411, 1703, 1362, 579, 3075, 1765, 0] Fitness: [[1.948875]] Classifier Val: [[0.]]
+Counterfactual at location: 2,3: [45834, 2, 2, 2, 22, 0, 0, 0, 0, 1, 0, 28387, 29904, 29786, 26886, 28031, 6411, 1703, 1362, 579, 2942, 1765, 0] Fitness: [[1.9322271]] Classifier Val: [[0.]]
 Counterfactual at location: 3,0: None
-Counterfactual at location: 3,1: [28900, 2, 2, 2, 22, 0, 0, 2, 0, 2, 0, 28341, 29612, 30958, 28004, 26669, 6515, 1654, 1586, 712, 3125, 1777, 734] Fitness: [[1.8487165]] Classifier Val: [[0.]]
-Counterfactual at location: 3,2: None
-Counterfactual at location: 3,3: None
+Counterfactual at location: 3,1: [30000, 2, 2, 2, 22, 0, 0, 0, 0, 2, 0, 28387, 30727, 29786, 27931, 26546, 6411, 1703, 1362, 579, 2942, 1765, 0] Fitness: [[1.9500113]] Classifier Val: [[0.]]
+Counterfactual at location: 3,2: [30865, 2, 2, 2, 22, 0, 0, 0, 0, 2, 0, 26849, 29904, 29786, 27308, 26546, 6411, 1703, 1362, 579, 3075, 1765, 0] Fitness: [[1.9464031]] Classifier Val: [[0.]]
+Counterfactual at location: 3,3: [45834, 2, 2, 2, 22, 0, 0, 0, 0, 2, 0, 28387, 30727, 29786, 27931, 26546, 6411, 1703, 1362, 579, 3075, 1765, 0] Fitness: [[1.9347712]] Classifier Val: [[0.]]
 Counterfactual at location: 4,0: None
-Counterfactual at location: 4,1: None
-Counterfactual at location: 4,2: None
-Counterfactual at location: 4,3: None
+Counterfactual at location: 4,1: [30000, 2, 2, 2, 22, 0, 0, 0, 0, 3, 0, 28387, 29904, 33417, 28965, 25484, 6411, 1703, 1362, 579, 2942, 1765, 0] Fitness: [[1.9451699]] Classifier Val: [[0.]]
+Counterfactual at location: 4,2: [30865, 2, 2, 2, 22, 0, 0, 0, 0, 3, 0, 28387, 29904, 29786, 27308, 25484, 6411, 1703, 1362, 579, 2942, 1765, 0] Fitness: [[1.9475609]] Classifier Val: [[0.]]
+Counterfactual at location: 4,3: [45834, 2, 2, 2, 21, 0, 0, 0, 0, 3, 0, 28387, 29904, 29786, 27864, 26546, 6411, 1746, 1362, 579, 2942, 1765, 0] Fitness: [[1.9330039]] Classifier Val: [[0.]]
 Counterfactual at location: 5,0: None
-Counterfactual at location: 5,1: None
-Counterfactual at location: 5,2: None
-Counterfactual at location: 5,3: None
+Counterfactual at location: 5,1: [30000, 2, 2, 2, 22, 0, 0, 0, 0, 4, 0, 28387, 29904, 33417, 28965, 25484, 6411, 1703, 1362, 579, 2942, 1765, 0] Fitness: [[1.9451699]] Classifier Val: [[0.]]
+Counterfactual at location: 5,2: [30865, 2, 2, 2, 22, 0, 0, 0, 0, 4, 0, 28387, 27746, 29786, 25231, 26546, 6411, 1746, 1362, 579, 2942, 1765, 0] Fitness: [[1.9423786]] Classifier Val: [[0.]]
+Counterfactual at location: 5,3: [46389, 2, 2, 2, 22, 0, 0, 0, 0, 4, 0, 28387, 29904, 29786, 27308, 26546, 6411, 1703, 1342, 579, 2942, 1765, 0] Fitness: [[1.9342153]] Classifier Val: [[0.]]
 Counterfactual at location: 6,0: None
-Counterfactual at location: 6,1: None
-Counterfactual at location: 6,2: None
-Counterfactual at location: 6,3: None
+Counterfactual at location: 6,1: [30000, 2, 2, 2, 22, 0, 0, 0, 0, 5, 0, 28387, 29904, 29786, 27308, 26546, 6411, 1703, 1417, 579, 3075, 1765, 0] Fitness: [[1.9506358]] Classifier Val: [[0.]]
+Counterfactual at location: 6,2: [30865, 2, 2, 2, 22, 0, 0, 0, 0, 5, 0, 28387, 29904, 29786, 27308, 26546, 6411, 1703, 1342, 579, 3075, 1765, 0] Fitness: [[1.9481378]] Classifier Val: [[0.]]
+Counterfactual at location: 6,3: [46389, 2, 2, 2, 22, 0, 0, 0, 0, 5, 0, 28387, 29904, 29786, 27308, 26546, 6411, 1703, 1342, 579, 3075, 1765, 0] Fitness: [[1.9339955]] Classifier Val: [[0.]]
 Counterfactual at location: 7,0: None
-Counterfactual at location: 7,1: None
-Counterfactual at location: 7,2: None
-Counterfactual at location: 7,3: None
+Counterfactual at location: 7,1: [30000, 2, 2, 2, 22, 0, 0, 0, 0, 6, 0, 28387, 27433, 29786, 25231, 24400, 6411, 1703, 1362, 579, 2942, 1765, 0] Fitness: [[1.9409977]] Classifier Val: [[0.]]
+Counterfactual at location: 7,2: [30865, 2, 2, 2, 22, 0, 0, 0, 0, 6, 0, 28387, 27746, 29786, 25231, 26546, 6411, 1703, 1362, 579, 2942, 1765, 0] Fitness: [[1.9434388]] Classifier Val: [[0.]]
+Counterfactual at location: 7,3: [45834, 2, 2, 2, 22, 0, 0, 0, 0, 6, 0, 28387, 29904, 29786, 27308, 24400, 6411, 1703, 1362, 579, 2942, 1765, 0] Fitness: [[1.931977]] Classifier Val: [[0.]]
 Counterfactual at location: 8,0: None
-Counterfactual at location: 8,1: None
-Counterfactual at location: 8,2: None
-Counterfactual at location: 8,3: None
+Counterfactual at location: 8,1: [29490, 2, 2, 2, 21, 0, 0, 0, 0, 7, 0, 28387, 29904, 29786, 27864, 26546, 6411, 1746, 1362, 579, 2942, 1765, 0] Fitness: [[1.9472849]] Classifier Val: [[0.]]
+Counterfactual at location: 8,2: [30865, 2, 2, 2, 22, 0, 0, 0, 0, 7, 0, 28387, 29904, 29786, 27308, 26546, 6411, 1746, 1362, 579, 3075, 1765, 0] Fitness: [[1.9476987]] Classifier Val: [[0.]]
+Counterfactual at location: 8,3: [45834, 2, 2, 2, 22, 0, 0, 0, 0, 7, 0, 28387, 29904, 29786, 27864, 26546, 6411, 1746, 1362, 579, 2942, 1765, 0] Fitness: [[1.9349802]] Classifier Val: [[0.]]
 Counterfactual at location: 9,0: None
-Counterfactual at location: 9,1: None
-Counterfactual at location: 9,2: None
-Counterfactual at location: 9,3: None
+Counterfactual at location: 9,1: [30000, 2, 2, 2, 22, 0, 0, 0, 0, 8, 0, 28387, 29904, 29786, 27308, 26546, 6411, 1746, 1362, 579, 2942, 1765, 0] Fitness: [[1.9491371]] Classifier Val: [[0.]]
+Counterfactual at location: 9,2: [30865, 2, 2, 2, 22, 0, 0, 0, 0, 8, 0, 28387, 27746, 29786, 27308, 26546, 6411, 1703, 1362, 579, 3075, 1765, 0] Fitness: [[1.9464436]] Classifier Val: [[0.]]
+Counterfactual at location: 9,3: [45834, 2, 2, 2, 22, 0, 0, 0, 0, 8, 0, 28387, 29904, 29786, 27308, 24400, 6411, 1703, 1362, 579, 3075, 1765, 0] Fitness: [[1.9317572]] Classifier Val: [[0.]]
 Counterfactual at location: 10,0: None
-Counterfactual at location: 10,1: None
-Counterfactual at location: 10,2: None
-Counterfactual at location: 10,3: None
+Counterfactual at location: 10,1: [30000, 2, 2, 2, 22, 0, 0, 0, 0, 9, 0, 28387, 29904, 29786, 28965, 26976, 6411, 1703, 1362, 579, 2942, 1765, 0] Fitness: [[1.9491448]] Classifier Val: [[0.]]
+Counterfactual at location: 10,2: [30865, 2, 2, 2, 22, 0, 0, 0, 0, 9, 0, 28387, 27746, 32477, 25231, 26546, 6411, 1746, 1362, 579, 3075, 1765, 0] Fitness: [[1.9400533]] Classifier Val: [[0.]]
+Counterfactual at location: 10,3: [45834, 2, 2, 2, 22, 0, 0, 0, 0, 9, 0, 28387, 29904, 29786, 27308, 26546, 6411, 1703, 1362, 579, 2942, 1765, 0] Fitness: [[1.935177]] Classifier Val: [[0.]]
 Counterfactual at location: 11,0: None
 Counterfactual at location: 11,1: None
 Counterfactual at location: 11,2: None
