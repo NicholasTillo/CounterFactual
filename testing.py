@@ -3,6 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import deeplearningmodel
 from sklearn.datasets import make_classification
+from ast import literal_eval
 
 import csv
 # Create a sample 2D numpy array
@@ -139,13 +140,28 @@ import csv
 # path = os.path.join(cwd, "Output")           
 # os.makedirs(path)
 # print(cwd)
-with open("make_classification_file.csv","w") as csvfile:
-    spamwriter = csv.writer(csvfile, delimiter=',')
-    X,y = make_classification(n_samples=1000)
-    for i in zip(X,y):
-        i1 = str(i[0]).replace("[",'').replace("]",'')
-        i2 = str(i[1])
-        iret = i1 + "," + i2
 
-        spamwriter.writerow(iret)
+def actual_important():
 
+    with open("make_classification_file.csv","w",newline='') as csvfile:
+        spamwriter = csv.writer(csvfile, dialect='excel')
+        X,y = make_classification(n_samples=1000)
+        ret = []
+        for i in range(len(X[0])):
+            ret.append("F"+str(i))
+        ret.append("Label")
+        spamwriter.writerow(ret)
+        for i in zip(X,y):
+            # result=""
+            # for j in i[0]:
+            #     result += str(j) + ","
+
+            # result += str(i[1])#.replace("[",'').replace("]",'')
+            # # print(iret)
+            # print(result)
+            ret = list(i[0])
+            ret.append(i[1])
+            spamwriter.writerow(ret)
+
+line = "[[1,2,3],'int']"
+print(literal_eval(line))

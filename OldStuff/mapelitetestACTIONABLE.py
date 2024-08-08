@@ -475,9 +475,9 @@ featureSpaceLists= [int,
                     int,
                     int]
 #Get whether if the conditions are actionable or not.
-actionable = [False,False,False,True, True, False,True,True,True,True,
-              True,True,True,True,True,True,True,True,True,True,True,
-              True,True]
+actionable = [0,0,0,1, 1, 0,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,1,1,
+              1,1]
 
 resolutionx = 20
 resolutiony = 5

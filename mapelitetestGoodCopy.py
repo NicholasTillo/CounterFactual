@@ -58,9 +58,9 @@ class Individual:
                     randIndex = (random.random() * len(value))
                     self.param[i] = value[randIndex]
 
-                elif type(value) == type:
+                elif type(value) == str:
                     #If the range is a specific data type. 
-                    if value == int:
+                    if value == "int":
                         #When reaching an integer, mutate by an amount up to 10% of the standard deviation. 
 
                         with open("statFile.txt",'r') as statFile:
@@ -78,9 +78,6 @@ class Individual:
                             else:
                                 self.param[i] -= number
 
-                            if i == 3:
-                                print(number)
-                                print(self.param[i])
                         
         return 
     
@@ -582,7 +579,7 @@ class MapEliteRunner:
         plot = plot.get_figure()
         plot.savefig("Output/figure"+str(where)+".png")
         plot.clf()
-        return
+        return 
 
     def showAllCFs(self, where):
         allInst = self.map.getGrid()
@@ -605,7 +602,7 @@ class MapEliteRunner:
                     countj+=1
                 counti+=1
 
-        return self.map.getGrid()
+        return allInst
 
 
     def run(self,iterations,where, showGrid = True):
@@ -631,7 +628,10 @@ class MapEliteRunner:
         
         self.showPlot(showGrid = showGrid, where = where)
         print("Total Number Of Elites: " + str(self.map.updateNumElite()))
-        self.showAllCFs(where)
+        resultFig =  self.showAllCFs(where)
+        return resultFig
+
+
 
     def runAllCombinations(self,iterations):
 
@@ -683,7 +683,7 @@ def main():
                         int,
                         int]
     #Get whether if the conditions are actionable or not.
-    actionable = [0,0,0,0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    actionable = [0,0,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 
     resolutionx = 4
     resolutiony = 20
@@ -744,5 +744,3 @@ def main2():
     runner = MapEliteRunner(mutationRate,  gridstats,  "TwoYearRec\compass_data_mace.csv", Model, userInput,  DescriptorList,  featureSpaceLists, actionable)
     # runner.runAllCombinations(iteration)
     runner.run(iteration,"Name")
-
-main()

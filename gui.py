@@ -66,14 +66,13 @@ class MainWindow(wid.QMainWindow):
         entry7 = wid.QLineEdit("[3,3]")
         entry7.setAlignment(core.Qt.AlignHCenter)
 
-        entry8 = wid.QLineEdit("[1,2,3]")
+        entry8 = wid.QLineEdit("[1,2,3,700]")
         entry8.setAlignment(core.Qt.AlignHCenter)
 
 
 
         labelOutput = wid.QLabel("OUTPUT")
         labelOutput.setAlignment(core.Qt.AlignHCenter)
-
 
         layout = wid.QVBoxLayout()
         layout.addWidget(button)
@@ -116,11 +115,16 @@ class MainWindow(wid.QMainWindow):
     def single_run(self):
         print(self.entryone.text())
 
+
+    def manualchange(self):
+        pass
+
+
     def all_features(self):
 
         userInput = [float(i) for i in self.entryeight.text().replace("[","").replace("]","").split(",")]
         DescriptorList = [int(i) for i in self.entryfive.text().replace("[","").replace("]","").split(",")]
-        featureSpaceLists = literal_eval(self.entryfour.text())
+        featureSpaceLists = self.manualchange(self.entryfour.text())
 
         print(featureSpaceLists)
         print(type(featureSpaceLists))
@@ -150,9 +154,13 @@ class MainWindow(wid.QMainWindow):
         Model = deeplearningmodelGoodCopy.modelReader(len(userInput))
         Model.createModel("Data\default_of_credit_card_clients.csv")
         runner = mapelitetestGoodCopy.MapEliteRunner(mutationRate,  gridstats,  "Data\default_of_credit_card_clients.csv", Model, userInput,  DescriptorList,  featureSpaceLists,actionable)
-        runner.run(iteration)
+        result = runner.run(iteration)
         # runner.runAllCombinations()
         self.make_shortcut_file(userInput,DescriptorList, featureSpaceLists,actionable,gridstats,iteration)
+    
+        self.subsite = OutputWindow(result)
+        self.subsite.show()
+
         
 
 
@@ -171,21 +179,27 @@ class ChosenLoadFile(wid.QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("My App")
-        self.setFixedSize(core.QSize(400, 300))
+        self.setFixedSize(core.QSize(800,600))
 
-        label1 = wid.QLabel("Get the Directory Of The Premade File. The data is stored as: UserInput, DescriptorList, FeatureSpaceList,actionableList,GridStatus, iterations, all seperated by new lines. ")
+        label1 = wid.QLabel("Get the Directory Of The Premade File. The data is stored as: \n UserInput, DescriptorList, FeatureSpaceList,actionableList,GridStatus, iterations, \n all seperated by new lines. ")
         label1.setAlignment(core.Qt.AlignHCenter)
 
         entry1 = wid.QLineEdit("X")
         entry1.setAlignment(core.Qt.AlignHCenter)
+        self.entry = entry1
 
         button = wid.QPushButton("Finalize!")
         button.clicked.connect(self.button_done)
+
+        buttonOpen = wid.QPushButton("Open File")
+        buttonOpen.clicked.connect(self.openShortcut)   
 
         layout = wid.QVBoxLayout()
         layout.addWidget(label1)
         layout.addWidget(entry1)
         layout.addWidget(button)
+        layout.addWidget(buttonOpen)
+
 
         window = wid.QWidget()
         window.setLayout(layout)
@@ -196,11 +210,39 @@ class ChosenLoadFile(wid.QMainWindow):
     def button_done(self,Param):
         print("do Calculations")
         pass
-
-    def openShortcut(self,path):
-        with open(path,"r") as shorcutFile:
-            pass
+    def manualchange(self):
         pass
+    def openShortcut(self):
+        #try:
+            path = self.entry.text()
+            with open(path,"r") as shorcutFile:
+                
+                userInput = literal_eval(shorcutFile.readline())
+                DescriptorList = literal_eval(shorcutFile.readline())
+                featureSpaceLists = literal_eval(shorcutFile.readline())
+
+                actionable = literal_eval(shorcutFile.readline())
+                gridstats = literal_eval(shorcutFile.readline())
+                iteration = int(shorcutFile.readline())
+
+                datalink = shorcutFile.readline()
+
+                #Create empty grid. 
+                
+                #Create some test individuals. 
+
+                mutationRate = 0.05
+                Model = deeplearningmodelGoodCopy.modelReader(len(userInput))
+                Model.createModel(datalink)
+
+                runner = mapelitetestGoodCopy.MapEliteRunner(mutationRate,  gridstats,  "Data\default_of_credit_card_clients.csv", Model, userInput,  DescriptorList,  featureSpaceLists,actionable)
+                result = runner.run(iteration, "here", showGrid=False)
+
+
+                self.subsite = OutputWindow(result)
+                self.subsite.show()
+        #except:
+            print("Error Has Occured, Try New Path")
 
 
 
@@ -209,7 +251,7 @@ class DialogWindow(wid.QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("My App")
-        self.setFixedSize(core.QSize(400, 300))
+        self.setFixedSize(core.QSize(800,600))
         
         label1 = wid.QLabel("Do You Have A File To Load Data From?")
         label1.setAlignment(core.Qt.AlignHCenter)
@@ -219,7 +261,6 @@ class DialogWindow(wid.QMainWindow):
         buttonyes.clicked.connect(self.yes_clicked)
         buttonno = wid.QPushButton("No!")
         buttonno.clicked.connect(self.no_clicked)
-
 
         layout = wid.QVBoxLayout()
         layout.addWidget(label1)
@@ -232,7 +273,6 @@ class DialogWindow(wid.QMainWindow):
         self.setCentralWidget(window)
 
 
-        
     def yes_clicked(self,param):
         self.subwindow = ChosenLoadFile()
         self.subwindow.show()
@@ -242,7 +282,98 @@ class DialogWindow(wid.QMainWindow):
     
 
 
+class OutputWindow(wid.QMainWindow):
+    def __init__(self, dataoutput):
+        super().__init__()
+        self.data = dataoutput
+        self.setWindowTitle("My App")
+        self.setFixedSize(core.QSize(800,600))
+        self.selected = 1
 
+
+        layout = wid.QGridLayout()
+
+        submitbutton = wid.QPushButton("Learn More")
+        submitbutton.clicked.connect(self.ClickedInfo)
+
+        labelx = wid.QLabel("Do You Have A File To Load Data From?")
+        labely = wid.QLabel("Do You Have A File To Load Data From?")
+
+
+        
+
+
+        self.buttons = {}
+
+        counterx = 0
+
+        for i in self.data:
+            countery = 0
+
+            for j in i:
+                tempButton = wid.QRadioButton(self)
+                if j == None:
+                    text = "None"
+                    tempButton.setText(text)
+                else:
+                    tempButton.setText(str(j.fitness[0]))
+                tempButton.toggled.connect(lambda _, p=j: self.select(p))
+                layout.addWidget(tempButton, countery,counterx)
+                countery += 1
+            counterx += 1
+        
+        layout.addWidget(labelx,countery,counterx + 1)
+        layout.addWidget(labely,countery,counterx + 2)
+        layout.addWidget(submitbutton,countery,counterx + 2)
+
+
+
+        window = wid.QWidget()
+        window.setLayout(layout)
+
+        self.setCentralWidget(window)
+        
+
+
+    def select(self,param):
+        print(self.buttons)
+        print(param)
+
+        self.selected = param
+        
+        print("trigger")
+        print(self.selected)
+
+    
+
+    def ClickedInfo(self,param):
+        print(self.selected)
+
+        self.subwindow = SingleInfoScreen(self.selected)
+        self.subwindow.show()
+
+
+    
+
+class SingleInfoScreen(wid.QMainWindow):
+    def __init__(self,singleCF):
+        self.data = singleCF
+
+        super().__init__()
+        self.setWindowTitle("My App")
+        self.setFixedSize(core.QSize(800,600))
+
+        label1 = wid.QLabel(str(singleCF))
+        label1.setAlignment(core.Qt.AlignHCenter)
+        layout = wid.QVBoxLayout()
+        layout.addWidget(label1)
+        window = wid.QWidget()
+        window.setLayout(layout)
+
+        self.setCentralWidget(window)
+
+
+    
 application = wid.QApplication(sys.argv)
 
 window = DialogWindow()
