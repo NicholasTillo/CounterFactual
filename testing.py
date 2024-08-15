@@ -163,5 +163,7 @@ def actual_important():
             ret.append(i[1])
             spamwriter.writerow(ret)
 
-line = "[[1,2,3],'int']"
-print(literal_eval(line))
+# line = "[[1,2,3],'int']"
+# print(literal_eval(line))
+
+

@@ -67,7 +67,8 @@ class modelReader:
         
 
         #Split into eval and training data
-        split = -500
+
+        split = -(int(len(data) * 0.2))
         dataEVAL = data[split:]
         labelEVAL = labels[split:]
 
@@ -84,7 +85,37 @@ class modelReader:
         model.add(tf.keras.layers.Dense(128, activation='relu'))
         model.add(tf.keras.layers.Dropout(0.2))
         model.add(tf.keras.layers.Dense(128, activation='relu'))  
-        model.add(tf.keras.layers.Dense(1, activation='sigmoid'))  # Output layer with 1 neuron and sigmoid activation for binary classification
+        model.add(tf.keras.layers.Dense(1, activation='sigmoid'))
+
+        #3x64 No Dropout
+        # model.add(tf.keras.layers.Input(shape=(self.numFeatures,)))
+        # model.add(tf.keras.layers.Dense(64, activation='relu'))  
+        # model.add(tf.keras.layers.Dense(64, activation='relu'))
+        # model.add(tf.keras.layers.Dense(64, activation='relu'))  
+        # model.add(tf.keras.layers.Dense(1, activation='sigmoid'))  # Output layer with 1 neuron and sigmoid activation for binary classification
+
+        #5x64 No Dropout
+        # model.add(tf.keras.layers.Input(shape=(self.numFeatures,)))
+        # model.add(tf.keras.layers.Dense(64, activation='relu'))  
+        # model.add(tf.keras.layers.Dense(64, activation='relu'))
+        # model.add(tf.keras.layers.Dense(64, activation='relu'))
+        # model.add(tf.keras.layers.Dense(64, activation='relu'))  
+        # model.add(tf.keras.layers.Dense(64, activation='relu'))  
+        # model.add(tf.keras.layers.Dense(1, activation='sigmoid')) 
+
+
+        #1x512
+        # model.add(tf.keras.layers.Input(shape=(self.numFeatures,)))
+        # model.add(tf.keras.layers.Dense(512, activation='relu'))  
+        # model.add(tf.keras.layers.Dense(1, activation='sigmoid')) 
+
+        #3x256
+        # model.add(tf.keras.layers.Input(shape=(self.numFeatures,)))
+        # model.add(tf.keras.layers.Dense(256, activation='relu'))  
+        # model.add(tf.keras.layers.Dense(256, activation='relu'))
+        # model.add(tf.keras.layers.Dense(256, activation='relu'))  
+        # model.add(tf.keras.layers.Dense(1, activation='sigmoid')) 
+
 
         # Compiling the model
         model.compile(optimizer='adam', loss= tf.keras.losses.BinaryCrossentropy(), metrics=['accuracy'])
@@ -94,7 +125,7 @@ class modelReader:
         self.model = model
 
         self.createSave(model)
-        #self.evaluate(dataEVAL,labelEVAL,data,labels)
+        self.evaluate(dataEVAL,labelEVAL,data,labels)
 
         return "Model Loaded Success from File"
 

@@ -72,7 +72,25 @@ class Individual:
                                     number = 1
                             
 
-                            if num < (self.runner.mutationrate/2) or self.param[i] < number:
+                            if num < (self.runner.mutationrate/2):
+                                #Chose wether to increase or decrease the number. 
+                                self.param[i] += number 
+                            else:
+                                self.param[i] -= number
+
+                    if value == "float":
+                        #When reaching an float, mutate by an amount up to 10% of the standard deviation. 
+
+                        with open("statFile.txt",'r') as statFile:
+                            #Find the mean and standard deivation
+                            mean, std = statFile.readlines()[i].split(",")
+                            number = (float(std) * (random.random()*0.1))
+                            if number == 0:
+                                if random.random() < 0.5:
+                                    number = 1
+                            
+
+                            if num < (self.runner.mutationrate/2):
                                 #Chose wether to increase or decrease the number. 
                                 self.param[i] += number 
                             else:
@@ -226,7 +244,7 @@ class Grid:
 
 
 class MapEliteRunner:
-    def __init__(self,mutationRate,gridData, data, model,originalList, descriptorList, featureSpaceList,actionablelist) -> None:
+    def __init__(self,mutationRate,gridData, data, model,originalList, descriptorList, featureSpaceList,actionablelist, tuningVal = None) -> None:
         #Self Explanitory
         self.mutationrate = mutationRate
 
@@ -251,16 +269,22 @@ class MapEliteRunner:
         self.featureSpaceLists = featureSpaceList
         self.actionableList = actionablelist
 
+        if not tuningVal:
+            self.tuningValue = 1
+        else:
+            self.tuningValue = tuningVal
+
         self.xlabel = None
         self.ylabel = None
 
 
         testind1 = Individual(originalList.copy(), self)
-
         testind1.determineBehaviour()
         testind1.classify(self.classifier)
         testind1.determineFitness() 
         self.checkElite(testind1)
+
+        
         pass
 
 
@@ -378,25 +402,26 @@ class MapEliteRunner:
             #Initilaize Empty Lists. 
             featurelist = []
 
-            rangenum = float(tolerance_number*self.originalList[num])
-            if rangenum == 0:
-                with open("statFile.txt") as stats:
-                    mean, std = stats.readlines()[num].split(",")
-                    rangenum = float(mean) + 2*float(std)
+
+            with open("statFile.txt") as stats:
+                mean, std = stats.readlines()[num].split(",")
+                rangenum = float(mean) + float(std) * self.tuningValue
 
             boxsize = int(rangenum) / usedNum
 
             #Iterate through all the numbers, and find which smallest one encapsulates in input (ind[num])
             #Also make sure to 
-            current = 0
+            current = (self.originalList[num] - (rangenum/2))
             value = None
 
             for i in range(usedNum):
+
                 next = current + boxsize
                 if type(self.originalList[num]) == int:
                     featurelist.append(str(int(current)) + " - " + str(int(next)))
                 elif type(self.originalList[num]) == float:
                     featurelist.append("{:.3f}".format(float(current)) + " - " + "{:.3f}".format(float(next)))
+
 
                 if ind[num] <= next and value == None:
                     value = i

@@ -3,7 +3,7 @@ import PyQt5.QtWidgets as wid
 import PyQt5.QtCore as core
 
 import deeplearningmodelGoodCopy
-import mapelitetestGoodCopy
+import mapelitetestTesting
 import sys
 from ast import literal_eval
 
@@ -153,7 +153,7 @@ class MainWindow(wid.QMainWindow):
         mutationRate = 0.05
         Model = deeplearningmodelGoodCopy.modelReader(len(userInput))
         Model.createModel("Data\default_of_credit_card_clients.csv")
-        runner = mapelitetestGoodCopy.MapEliteRunner(mutationRate,  gridstats,  "Data\default_of_credit_card_clients.csv", Model, userInput,  DescriptorList,  featureSpaceLists,actionable)
+        runner = mapelitetestTesting.MapEliteRunner(mutationRate,  gridstats,  "Data\default_of_credit_card_clients.csv", Model, userInput,  DescriptorList,  featureSpaceLists,actionable)
         result = runner.run(iteration)
         # runner.runAllCombinations()
         self.make_shortcut_file(userInput,DescriptorList, featureSpaceLists,actionable,gridstats,iteration)
@@ -235,8 +235,8 @@ class ChosenLoadFile(wid.QMainWindow):
                 Model = deeplearningmodelGoodCopy.modelReader(len(userInput))
                 Model.createModel(datalink)
 
-                runner = mapelitetestGoodCopy.MapEliteRunner(mutationRate,  gridstats,  "Data\default_of_credit_card_clients.csv", Model, userInput,  DescriptorList,  featureSpaceLists,actionable)
-                result = runner.run(iteration, "3x128, dropout", showGrid=False)
+                runner = mapelitetestTesting.MapEliteRunner(mutationRate,  gridstats,  "Data\default_of_credit_card_clients.csv", Model, userInput,  DescriptorList,  featureSpaceLists,actionable)
+                result = runner.run(iteration, "Here", showGrid=False)
 
 
                 self.subsite = OutputWindow(result)
