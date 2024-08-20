@@ -3,6 +3,7 @@ from keras import Sequential
 from keras import models
 import tensorflow as tf
 import csv
+from os import remove, path
 
 
 class modelReader:
@@ -48,9 +49,22 @@ class modelReader:
         
         if self.checkSave():
             self.loadSave()
-            return "Recived from File"
-        
-        data,labels = self.loadData(datalink) 
+            
+            #Test if its the correct shape
+            data,labels = self.loadData(datalink) 
+            try:
+                self.predict(data[0])
+                return "Recived from File"
+            except:
+                #Delete Original Files, then continue on making as normal
+                if path.exists("my_model.keras"):
+                    remove("my_model.keras")
+                if path.exists("statFile.txt"):
+                    remove("statFile.txt")
+                pass
+
+        else:
+            data,labels = self.loadData(datalink) 
 
         # Standarize data. 
         data = np.transpose(data)

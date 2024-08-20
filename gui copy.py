@@ -14,7 +14,7 @@ class MainWindow(wid.QMainWindow):
 
         self.setWindowTitle("My App")
 
-        self.setFixedSize(core.QSize(400, 600))
+        self.setFixedSize(core.QSize(400, 800))
         # Set the central widget of the Window.
 
         
@@ -44,6 +44,11 @@ class MainWindow(wid.QMainWindow):
         label8 = wid.QLabel("Original Data Inputted")
         label8.setAlignment(core.Qt.AlignHCenter)
 
+        label9 = wid.QLabel("Number of Iterations")
+        label9.setAlignment(core.Qt.AlignHCenter)
+
+        label10 = wid.QLabel("Optional Name")
+        label10.setAlignment(core.Qt.AlignHCenter)
 
         entry1 = wid.QLineEdit("DirectoryData")
         entry1.setAlignment(core.Qt.AlignHCenter)
@@ -69,7 +74,11 @@ class MainWindow(wid.QMainWindow):
         entry8 = wid.QLineEdit("[1,2,3,700]")
         entry8.setAlignment(core.Qt.AlignHCenter)
 
+        entry9 = wid.QLineEdit("300")
+        entry9.setAlignment(core.Qt.AlignHCenter)
 
+        entry10 = wid.QLineEdit("")
+        entry10.setAlignment(core.Qt.AlignHCenter)
 
         labelOutput = wid.QLabel("OUTPUT")
         labelOutput.setAlignment(core.Qt.AlignHCenter)
@@ -93,6 +102,10 @@ class MainWindow(wid.QMainWindow):
         layout.addWidget(entry7)
         layout.addWidget(label8)
         layout.addWidget(entry8)
+        layout.addWidget(label9)
+        layout.addWidget(entry9)
+        layout.addWidget(label10)
+        layout.addWidget(entry10)
         layout.addWidget(labelOutput)
         
 
@@ -109,6 +122,10 @@ class MainWindow(wid.QMainWindow):
         self.entrysix = entry6
         self.entryseven = entry7
         self.entryeight = entry8
+        self.entrynine = entry9
+        self.entryten = entry10
+
+
 
 
         
@@ -121,58 +138,85 @@ class MainWindow(wid.QMainWindow):
 
 
     def all_features(self):
+        try:
+            userInput = [float(i) for i in self.entryeight.text().replace("[","").replace("]","").split(",")]
+            DescriptorList = [int(i) for i in self.entryfive.text().replace("[","").replace("]","").split(",")]
+            featureSpaceLists = literal_eval(self.entryfour.text())
 
-        userInput = [float(i) for i in self.entryeight.text().replace("[","").replace("]","").split(",")]
-        DescriptorList = [int(i) for i in self.entryfive.text().replace("[","").replace("]","").split(",")]
-        featureSpaceLists = self.manualchange(self.entryfour.text())
+            print(featureSpaceLists)
+            print(type(featureSpaceLists))
 
-        print(featureSpaceLists)
-        print(type(featureSpaceLists))
-
-        #Get whether if the conditions are actionable or not.
-        actionable = [int(i) for i in self.entrysix.text().replace("[","").replace("]","").split(",")]
-        iteration = 100
+            #Get whether if the conditions are actionable or not.
+            actionable = [int(i) for i in self.entrysix.text().replace("[","").replace("]","").split(",")]
+            
+            iteration = literal_eval(self.entrynine.text())
 
 
-        whatx = self.entrytwo.text()
-        whaty = self.entrythree.text()
-        if whatx.isdigit():
-            whatx = int(whatx)
+            whatx = literal_eval(self.entrytwo.text())
+            whaty = literal_eval(self.entrythree.text())
+
+            # if whatx.isdigit():
+            #     whatx = int(whatx)
+            
+            # if whaty.isdigit():
+            #     whaty = int(whaty)
+
+            #Create empty grid. 
+            gridstats = self.entryseven.text().replace("[","").replace("]","").split(",")
+            gridstats[0] = int(gridstats[0])
+            gridstats[1] = int(gridstats[1])
+            
+            gridstats.extend([whatx,whaty])
+            #Create some test individuals. 
+
+            mutationRate = 0.05
+
+            dataLink = self.entryone.text()
+
+            name = self.entryten.text()
+
+            Model = deeplearningmodelGoodCopy.modelReader(len(userInput))
+            Model.createModel(dataLink)
+            runner = mapelitetestTesting.MapEliteRunner(mutationRate,  gridstats,  "Data\default_of_credit_card_clients.csv", Model, userInput,  DescriptorList,  featureSpaceLists,actionable)
+            result = runner.run(iteration, showGrid = False)
+
+            self.make_shortcut_file(userInput,DescriptorList, featureSpaceLists,actionable,gridstats,iteration,name,dataLink)
         
-        if whaty.isdigit():
-            whaty = int(whaty)
-
-        #Create empty grid. 
-        gridstats = self.entryseven.text().replace("[","").replace("]","").split(",")
-        gridstats[0] = int(gridstats[0])
-        gridstats[1] = int(gridstats[1])
-        
-        gridstats.extend([whatx,whaty])
-        #Create some test individuals. 
-
-        mutationRate = 0.05
-        Model = deeplearningmodelGoodCopy.modelReader(len(userInput))
-        Model.createModel("Data\default_of_credit_card_clients.csv")
-        runner = mapelitetestTesting.MapEliteRunner(mutationRate,  gridstats,  "Data\default_of_credit_card_clients.csv", Model, userInput,  DescriptorList,  featureSpaceLists,actionable)
-        result = runner.run(iteration)
-        # runner.runAllCombinations()
-        self.make_shortcut_file(userInput,DescriptorList, featureSpaceLists,actionable,gridstats,iteration)
-    
-        self.subsite = OutputWindow(result)
-        self.subsite.show()
+            self.subsite = OutputWindow(result)
+            self.subsite.show()
+        except:
+            self.errorScreen = errorWindow()
+            self.errorScreen.show()
 
         
-
-
-
-    def make_shortcut_file(self, uI, dL, fSL, actionable, gS,iteration):
-        with open("shortcut.txt","w") as shortcutFile:
-            shortcutFile.write(uI+"\n"+dL+"\n"+fSL+"\n"+actionable+"\n"+gS+"\n"+iteration)
+    def make_shortcut_file(self, uI, dL, fSL, actionable, gS,iteration,name,dataLink):
+        with open("shortcut"+name+".txt","w") as shortcutFile:
+            shortcutFile.write(str(uI)+"\n"+str(dL)+"\n"+str(fSL)+"\n"+str(actionable)+"\n"+str(gS)+"\n"+str(iteration) + "\n"+str(dataLink))
         
 
 
 
         
+
+class errorWindow(wid.QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("My App")
+        self.setFixedSize(core.QSize(300,200))
+        label1 = wid.QLabel("Error has occured with the path, \n please try again.")
+        label1.setAlignment(core.Qt.AlignHCenter)
+        closeButton = wid.QPushButton("Okay")
+        closeButton.clicked.connect(self.close) 
+
+        layout = wid.QVBoxLayout()
+        layout.addWidget(label1)
+        layout.addWidget(closeButton)
+
+
+        window = wid.QWidget()
+        window.setLayout(layout)
+
+        self.setCentralWidget(window)
 
 
 class ChosenLoadFile(wid.QMainWindow):
@@ -188,8 +232,15 @@ class ChosenLoadFile(wid.QMainWindow):
         entry1.setAlignment(core.Qt.AlignHCenter)
         self.entry = entry1
 
-        button = wid.QPushButton("Finalize!")
-        button.clicked.connect(self.button_done)
+
+        label2 = wid.QLabel("Optional: Name for output files")
+        label2.setAlignment(core.Qt.AlignHCenter)
+
+        entry2 = wid.QLineEdit("")
+        entry2.setAlignment(core.Qt.AlignHCenter)
+        self.entrytwo = entry2
+
+
 
         buttonOpen = wid.QPushButton("Open File")
         buttonOpen.clicked.connect(self.openShortcut)   
@@ -197,7 +248,8 @@ class ChosenLoadFile(wid.QMainWindow):
         layout = wid.QVBoxLayout()
         layout.addWidget(label1)
         layout.addWidget(entry1)
-        layout.addWidget(button)
+        layout.addWidget(label2)
+        layout.addWidget(entry2)
         layout.addWidget(buttonOpen)
 
 
@@ -207,13 +259,8 @@ class ChosenLoadFile(wid.QMainWindow):
         self.setCentralWidget(window)
 
 
-    def button_done(self,Param):
-        print("do Calculations")
-        pass
-    def manualchange(self):
-        pass
     def openShortcut(self):
-        #try:
+        try:
             path = self.entry.text()
             with open(path,"r") as shorcutFile:
                 
@@ -226,7 +273,7 @@ class ChosenLoadFile(wid.QMainWindow):
                 iteration = int(shorcutFile.readline())
 
                 datalink = shorcutFile.readline()
-
+                name = self.entrytwo.text()
                 #Create empty grid. 
                 
                 #Create some test individuals. 
@@ -236,14 +283,14 @@ class ChosenLoadFile(wid.QMainWindow):
                 Model.createModel(datalink)
 
                 runner = mapelitetestTesting.MapEliteRunner(mutationRate,  gridstats,  "Data\default_of_credit_card_clients.csv", Model, userInput,  DescriptorList,  featureSpaceLists,actionable)
-                result = runner.run(iteration, "Here", showGrid=False)
+                result = runner.run(iteration, name, showGrid=False)
 
 
                 self.subsite = OutputWindow(result)
                 self.subsite.show()
-        #except:
-            print("Error Has Occured, Try New Path")
-
+        except:
+            self.errorwindow = errorWindow()
+            self.errorwindow.show()
 
 
     
@@ -280,6 +327,37 @@ class DialogWindow(wid.QMainWindow):
         self.subwindow = MainWindow()
         self.subwindow.show()
     
+
+class SettingsScreen(wid.QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("My App")
+        self.setFixedSize(core.QSize(800,600))
+
+        label1 = wid.QLabel("Get the Directory Of The Premade File. The data is stored as: \n UserInput, DescriptorList, FeatureSpaceList,actionableList,GridStatus, iterations, \n all seperated by new lines. ")
+        label1.setAlignment(core.Qt.AlignHCenter)
+
+        entry1 = wid.QLineEdit("X")
+        entry1.setAlignment(core.Qt.AlignHCenter)
+        self.entry = entry1
+
+        buttonSave = wid.QPushButton("Save")
+        buttonSave.clicked.connect(self.saveSettings)   
+
+        layout = wid.QVBoxLayout()
+        layout.addWidget(label1)
+        layout.addWidget(entry1)
+        layout.addWidget(buttonSave)
+
+
+        window = wid.QWidget()
+        window.setLayout(layout)
+
+        self.setCentralWidget(window)
+
+        def saveSettings(self):
+            with open("settings.txt","w") as settingsFile:
+                pass
 
 
 class OutputWindow(wid.QMainWindow):

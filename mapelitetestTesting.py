@@ -5,6 +5,8 @@ from itertools import combinations
 import seaborn as sns
 import matplotlib.pyplot as plt
 import os
+from datetime import datetime
+
 
 #Import in a second. 
 class Individual:
@@ -516,13 +518,12 @@ class MapEliteRunner:
         
 
     def Fitness(self, ind):
-        #4 Way maximization function
-        #Validity, Proximity, Scarcisty, Plausibility. 
+        #2 Way maximization function
+        #Validity, Proximity,
 
         sparsity = 0
         #Validity, 
         validityval = ind.getClassifier()
-
         #Proximity, getting Distnace: using Gower distance Function
         #For each measure, 
         #If its qualitative, then use the Dice Distance, 
@@ -537,48 +538,32 @@ class MapEliteRunner:
                 #Do Range Normalized Manhattan Distance. 
                 if indList[i] == self.originalList[i]:
                     subtraction = 0
-                elif indList[i] == 0 or self.originalList[i] == 0:
-                    ## FIX THIS
-                    sparsity += 1
-                    subtraction = 1
-                elif indList[i] > self.originalList[i]:
-                    sparsity += 1
-                    subtraction = (np.abs((indList[i] - self.originalList[i]))/indList[i])
-                elif indList[i] < self.originalList[i]:
-                    sparsity += 1
-                    subtraction = (np.abs((indList[i] - self.originalList[i]))/self.originalList[i])
-                
 
-                #print(np.abs((standardizedIndList[i] - standardizedOrgList[i])) / standardizedOrgList[i])
+                elif indList[i] == 0 or self.originalList[i] == 0:
+                    subtraction = 1
+
+                elif abs(indList[i]) > abs(self.originalList[i]):
+                    subtraction = (np.abs((abs(indList[i]) - abs(self.originalList[i])))/indList[i])
+                
+                elif abs(indList[i]) < abs(self.originalList[i]):
+                    subtraction = (np.abs((abs(indList[i]) - abs(self.originalList[i])))/self.originalList[i])
+                
             elif self.descriptorList[i] == 1:
                 # Do Dice Distnace, 
-                # if standardizedIndList[i] == standardizedOrgList[i]:
                 if indList[i] ==  self.originalList[i]:
-
                     #If they are the same, there is no distnace, 
                     subtraction = 0
                 else:
                     #If they are not the same. 
                     subtraction = 1
-                    #sparsity += 1
 
-            resultList.append(subtraction)         
+
+            resultList.append(abs(subtraction))  
+               
 
         proximityval = (1 - (sum(resultList) / len(indList) ))
 
-        #Plausibility
-        #plausibiltiy  = 0
-        #Loop through the data, and find the cloest k neighbours. 
-
-        #Should describe a realisitc data instance, 
-        #Find the closest k neighbours within the datast. 
-
-        #Sparsity
-        #sparsity =  - (sparsity/len(indList))
-        #sparsity = 0
-        #Should vary from x* in only a few features.  
-
-        result = (1-validityval) + (proximityval) #+ plausibiltiy + sparsity
+        result = (1-validityval) + (proximityval) #
 
         return result
 
@@ -636,8 +621,7 @@ class MapEliteRunner:
         return allInst
 
 
-    def run(self,iterations,where, showGrid = True):
-
+    def run(self,iterations,where = None, showGrid = True):
         cwd = os.getcwd()
         path = os.path.join(cwd, "Output")
         if not os.path.exists(path):
@@ -646,7 +630,6 @@ class MapEliteRunner:
         for i in range(iterations):
             if i % 100 == 0:
                 print("Iteration: "+str(i))
-            #print("Iteration: "+str(i))
             #Select Parent
             #Genetic Variation
             #Development & evaluation
@@ -656,9 +639,15 @@ class MapEliteRunner:
             self.checkElite(child)
 
         #Visualize
+        if not where:
+            where = str(datetime.now()).split(".")[0].replace(" ","-").replace(":","-")
+
         
         self.showPlot(showGrid = showGrid, where = where)
         print("Total Number Of Elites: " + str(self.map.updateNumElite()))
+
+        
+
         resultFig =  self.showAllCFs(where)
         return resultFig
 

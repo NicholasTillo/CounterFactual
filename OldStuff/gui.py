@@ -3,7 +3,7 @@ import PyQt5.QtWidgets as wid
 import PyQt5.QtCore as core
 
 import deeplearningmodelGoodCopy
-import mapelitetestGoodCopy
+import OldStuff.mapelitetestGoodCopy as mapelitetestGoodCopy
 import sys
 from ast import literal_eval
 
