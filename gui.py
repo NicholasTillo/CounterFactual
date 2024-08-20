@@ -174,6 +174,36 @@ class MainWindow(wid.QMainWindow):
 
         
 
+class SettingsScreen(wid.QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("My App")
+        self.setFixedSize(core.QSize(800,600))
+
+        label1 = wid.QLabel("Get the Directory Of The Premade File. The data is stored as: \n UserInput, DescriptorList, FeatureSpaceList,actionableList,GridStatus, iterations, \n all seperated by new lines. ")
+        label1.setAlignment(core.Qt.AlignHCenter)
+
+        entry1 = wid.QLineEdit("X")
+        entry1.setAlignment(core.Qt.AlignHCenter)
+        self.entry = entry1
+
+        buttonSave = wid.QPushButton("Save")
+        buttonSave.clicked.connect(self.saveSettings)   
+
+        layout = wid.QVBoxLayout()
+        layout.addWidget(label1)
+        layout.addWidget(entry1)
+        layout.addWidget(buttonSave)
+
+
+        window = wid.QWidget()
+        window.setLayout(layout)
+
+        self.setCentralWidget(window)
+
+        def saveSettings(self):
+            with open("settings.txt","w") as settingsFile:
+                pass
 
 class ChosenLoadFile(wid.QMainWindow):
     def __init__(self):
